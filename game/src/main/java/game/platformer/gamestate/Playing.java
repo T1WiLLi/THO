@@ -6,10 +6,10 @@ import game.platformer.enities.Player;
 import game.platformer.levels.LevelManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 public class Playing extends State implements StateMethods {
+
     private Player player;
     private LevelManager levelManager;
     GamePane gp;
@@ -36,7 +36,6 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void update() {
-        levelManager.update();
         player.update();
     }
 
@@ -44,14 +43,13 @@ public class Playing extends State implements StateMethods {
     public void render(GraphicsContext gc) {
         gp.getCanvas().getGraphicsContext2D().clearRect(0, 0, gp.getCanvas().getWidth(),
                 gp.getCanvas().getHeight());
-        levelManager.draw(gp.getCanvas().getGraphicsContext2D());
+        levelManager.render(gp.getCanvas().getGraphicsContext2D());
         player.render(gp.getCanvas());
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY)
-            player.setAttack(true);
+
     }
 
     @Override
@@ -61,6 +59,16 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
 
     }
 
@@ -76,7 +84,7 @@ public class Playing extends State implements StateMethods {
             case SPACE:
                 player.setJump(true);
                 break;
-            case BACK_SPACE:
+            case ESCAPE:
                 GameState.state = GameState.MENU;
                 break;
             default:

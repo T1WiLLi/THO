@@ -13,7 +13,7 @@ public class LevelManager {
 
     public LevelManager(Game game) {
         importOutsideSprites();
-        levelOne = new Level(LoadSave.getLevelData());
+        levelOne = new Level(LoadSave.getLevelData(LoadSave.LEVEL_ONE_DATA));
     }
 
     private void importOutsideSprites() {
@@ -29,7 +29,7 @@ public class LevelManager {
         }
     }
 
-    public void draw(GraphicsContext gc) {
+    public void render(GraphicsContext gc) {
         for (int i = 0; i < Game.getTilesInHeight(); i++) {
             for (int j = 0; j < Game.getTilesInWidth(); j++) {
                 int index = levelOne.getSpriteIndex(j, i);
@@ -37,10 +37,6 @@ public class LevelManager {
                         Game.getTilesSize());
             }
         }
-    }
-
-    public void update() {
-
     }
 
     public Level getCurrentLevel() {

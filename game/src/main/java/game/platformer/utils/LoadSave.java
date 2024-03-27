@@ -9,13 +9,19 @@ import javafx.scene.paint.Color;
 
 public class LoadSave {
 
-    public static final String PLAYER_ATLAS = "player_sprites.png";
-    public static final String LEVEL_ATLAS = "outside_sprites.png";
-    public static final String LEVEL_ONE_DATA = "level_one_data.png";
+    public static final String PLAYER_ATLAS = "sprite/player_sprites.png";
+    public static final String LEVEL_ATLAS = "sprite/outside_sprites.png";
+    public static final String LEVEL_ONE_DATA = "sprite/level_one_data.png";
+
+    // ui
+    public static final String MENU_BUTTONS = "ui/button_atlas.png";
+    public static final String MENU_BACKGROUND = "ui/menu_background.png";
+    public static final String MENU_BACKGROUND_IMAGE = "menuBg.png";
+    public static final String OPTIONS_BACKGROUND = "ui/options_background.png";
 
     public static Image getSpriteAtlas(String filename) {
         Image img = null;
-        String path = "/game/platformer/assets/sprite/" + filename;
+        String path = "/game/platformer/assets/" + filename;
         InputStream is = LoadSave.class.getResourceAsStream(path);
         try {
             img = new Image(is);
@@ -33,9 +39,9 @@ public class LoadSave {
         return img;
     }
 
-    public static int[][] getLevelData() {
+    public static int[][] getLevelData(String filename) {
         int[][] lvlData = new int[Game.getTilesInHeight()][Game.getTilesInWidth()];
-        Image img = LoadSave.getSpriteAtlas(LoadSave.LEVEL_ONE_DATA);
+        Image img = LoadSave.getSpriteAtlas(filename);
         PixelReader pixelReader = img.getPixelReader();
         for (int j = 0; j < Game.getTilesInHeight(); j++) {
             for (int i = 0; i < Game.getTilesInWidth(); i++) {

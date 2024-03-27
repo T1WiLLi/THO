@@ -18,19 +18,13 @@ public abstract class Entity {
     }
 
     protected void drawHitbox(GraphicsContext gc) {
-        // For debugging the hitbox
         gc.setStroke(Color.RED);
         gc.strokeRect(hitbox.getX(), hitbox.getY(), width, height);
     }
 
-    protected void initHitbox(float x, float y, float width, float height) {
+    protected void initHitbox(float x, float y, int width, int height) {
         hitbox = new Rectangle(x, y, width, height);
     }
-
-    // protected void updateHitbox() {
-    // hitbox.setX(x);
-    // hitbox.setY(y);
-    // }
 
     public Rectangle getHitbox() {
         return this.hitbox;

@@ -14,9 +14,10 @@ import javafx.scene.image.WritableImage;
 public class Player extends Entity {
 
     private int playerAction = IDLE;
-    private boolean moving = false, attacking = false;
+    private boolean moving = false;
     private boolean left, up, down, right, jump;
-    private float playerSpeed = 3.0f;
+    private float playerSpeed = 1.0f * Game.getScale();
+
     private int[][] lvlData;
     private float xDrawOffset = 21 * Game.getScale();
     private float yDrawOffset = 4 * Game.getScale();
@@ -35,7 +36,7 @@ public class Player extends Entity {
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
-        initHitbox(x, y, 20 * Game.getScale(), 27 * Game.getScale());
+        initHitbox(x, y, (int) (20 * Game.getScale()), (int) (27 * Game.getScale()));
     }
 
     public void update() {
@@ -137,10 +138,6 @@ public class Player extends Entity {
             }
         }
 
-        if (attacking) {
-            playerAction = ATTACK_1;
-        }
-
         if (startAni != playerAction) {
             tickAnimation = 0;
             animationIndex = 0;
@@ -154,7 +151,6 @@ public class Player extends Entity {
             animationIndex++;
             if (animationIndex >= getSpriteAmount(playerAction)) {
                 animationIndex = 0;
-                attacking = false;
             }
         }
     }
@@ -181,10 +177,6 @@ public class Player extends Entity {
         up = false;
         down = false;
         right = false;
-    }
-
-    public void setAttack(boolean attacking) {
-        this.attacking = attacking;
     }
 
     public boolean isLeft() {
