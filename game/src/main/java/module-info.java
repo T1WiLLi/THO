@@ -1,10 +1,13 @@
-module game.engine {
+module game.platformer {
     requires java.desktop;
     requires javafx.controls;
     requires javafx.fxml;
     requires transitive javafx.graphics;
 
-    opens game.engine to javafx.fxml;
+    opens game.platformer to javafx.fxml;
 
-    exports game.engine;
+    exports game.platformer;
+    exports game.platformer.enities;
+    exports game.platformer.levels;
+    exports game.platformer.gamestate;
 }
