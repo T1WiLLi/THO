@@ -33,14 +33,21 @@ public class Player extends Entity {
     private WritableImage[][] animations;
     private int tickAnimation = 0, animationIndex = 0, aniSpeed = 20;
 
+    // Dash
+    private float dash; // max 100 means we can dash, otherwise, it take 5s to recharge.
+    private long lastDashTime = 0;
+    private final long RECHARGE_DURATION_MS = 5000;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
+        this.dash = 100;
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.getScale()), (int) (27 * Game.getScale()));
     }
 
     public void update() {
         updatePos();
+        updateDash(System.currentTimeMillis());
         updateAnimationTicks();
         setAnimation();
     }
@@ -49,6 +56,18 @@ public class Player extends Entity {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.drawImage(animations[playerAction][animationIndex], hitbox.getX() - xDrawOffset, hitbox.getY() - yDrawOffset,
                 width, height);
+    }
+
+    private void updateDash(long currentTime) {
+        long elapsedTimeSinceLastDash = currentTime - lastDashTime;
+        double percentageElapsed = (double) elapsedTimeSinceLastDash / RECHARGE_DURATION_MS;
+        dash = (float) Math.min(100, 100 * percentageElapsed);
+    }
+
+    private void performDash(double mouseX, double mouseY) {
+        // implement the logic to do the dash, we use the left click to dash, so we want
+        // to dash in that direction so we need to pass in either the mouseEvent or the
+        // mouse object directly
     }
 
     private void updatePos() {
@@ -219,4 +238,13 @@ public class Player extends Entity {
         return this.jump;
     }
 
+    public void dash(float value, double mouseX, double mouseY) {
+        this.dash = value;
+        this.lastDashTime = System.currentTimeMillis();
+        performDash(mouseX, mouseY);
+    }
+
+    public float getDashValue() {
+        return this.dash;
+    }
 }

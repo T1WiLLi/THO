@@ -121,26 +121,29 @@ public class Game extends Application implements Runnable {
     private void update() {
         Platform.runLater(() -> {
             switch (GameState.state) {
-                case MENU:
-                    menu.update();
-                    break;
-                case PLAYING:
-                    playing.update();
-                    break;
+                case MENU -> menu.update();
+                case PLAYING -> playing.update();
+                // case OPTIONS -> gameOptions.update();
+                case QUIT -> {
+                    // Make saves here
+                    Platform.exit();
+                    System.exit(0);
+                }
+                default -> System.out.println("Error");
             }
+            ;
         });
     }
 
     private void render() {
         Platform.runLater(() -> {
             switch (GameState.state) {
-                case MENU:
-                    menu.render(this.gamePanel.getGraphicsContext());
-                    break;
-                case PLAYING:
-                    playing.render(this.gamePanel.getGraphicsContext());
-                    break;
+                case MENU -> menu.render(this.gamePanel.getGraphicsContext());
+                case PLAYING -> playing.render(this.gamePanel.getGraphicsContext());
+                // case OPTIONS -> gameOptions.render(this.gamePanel.getGraphicsContext());
+                default -> System.out.println("Error");
             }
+            ;
         });
     }
 

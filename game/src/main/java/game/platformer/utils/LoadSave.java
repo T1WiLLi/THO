@@ -16,7 +16,7 @@ public class LoadSave {
     // ui
     public static final String MENU_BUTTONS = "ui/button_atlas.png";
     public static final String MENU_BACKGROUND = "ui/menu_background.png";
-    public static final String MENU_BACKGROUND_IMAGE = "menuBg.png";
+    public static final String MENU_BACKGROUND_IMAGE = "ui/menuBg.png";
     public static final String OPTIONS_BACKGROUND = "ui/options_background.png";
 
     public static Image getSpriteAtlas(String filename) {

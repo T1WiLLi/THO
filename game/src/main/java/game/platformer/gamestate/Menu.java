@@ -5,13 +5,10 @@ import game.platformer.enities.Player;
 import game.platformer.ui.MenuButtons;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class Menu extends State implements StateMethods {
 
