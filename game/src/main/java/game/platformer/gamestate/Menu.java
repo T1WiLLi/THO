@@ -22,11 +22,11 @@ public class Menu extends State implements StateMethods {
         this.player = player;
         loadButtons();
         loadBackground();
-        menuBg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND_IMAGE);
+        menuBg = LoadSave.getSprite(LoadSave.MENU_BACKGROUND_IMAGE);
     }
 
     private void loadBackground() {
-        backgroundImage = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
+        backgroundImage = LoadSave.getSprite(LoadSave.MENU_BACKGROUND);
         menuWidth = (int) (backgroundImage.getWidth() * Game.getScale());
         menuHeight = (int) (backgroundImage.getHeight() * Game.getScale());
         menuX = Game.getGameWidth() / 2 - menuWidth / 2;

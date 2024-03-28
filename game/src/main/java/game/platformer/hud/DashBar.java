@@ -27,10 +27,5 @@ public class DashBar {
 
         gc.setFill(Color.CADETBLUE);
         gc.fillRect(barX, barY, filledBarWidth, barHeight);
-
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-        String healthLabel = "Dash Progression: " + (int) (player.getDashValue()) + " / 100";
-        gc.fillText(healthLabel, barX + (barWidth / 2), (barY + (barHeight / 2)) + 3);
     }
 }

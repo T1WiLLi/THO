@@ -5,12 +5,13 @@ import game.platformer.gamestate.Menu;
 import game.platformer.gamestate.Playing;
 import game.platformer.input.InputHandler;
 import game.platformer.input.MouseHandler;
-
+import game.platformer.utils.LoadSave;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -53,8 +54,8 @@ public class Game extends Application implements Runnable {
     private final static int TILES_IN_WIDTH = 26;
     private final static int TILES_IN_HEIGHT = 14;
     private final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
-    private final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
-    private final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+    private final static int SCREEN_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    private final static int SCREEN_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     @Override
     public void start(Stage gameStage) throws Exception {
@@ -66,7 +67,8 @@ public class Game extends Application implements Runnable {
         gamePanel.setOnKeyReleased(inputHandler::handleKeyReleased);
         gamePanel.addEventFilter(MouseEvent.ANY, mouseHandler);
 
-        gameScene = new Scene(gamePanel, GAME_WIDTH, GAME_HEIGHT);
+        gameScene = new Scene(gamePanel, SCREEN_WIDTH, SCREEN_HEIGHT);
+        gameScene.setCursor(new ImageCursor(LoadSave.getSprite(LoadSave.CURSOR)));
         gamePanel.requestFocus();
 
         gameStage.setScene(gameScene);
@@ -106,7 +108,7 @@ public class Game extends Application implements Runnable {
     }
 
     private void initClasses() {
-        this.gamePanel = new GamePane(GAME_WIDTH, GAME_HEIGHT);
+        this.gamePanel = new GamePane(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.inputHandler = new InputHandler(this);
         this.mouseHandler = new MouseHandler(this);
         this.playing = new Playing(this);
@@ -211,11 +213,11 @@ public class Game extends Application implements Runnable {
     }
 
     public static int getGameWidth() {
-        return GAME_WIDTH;
+        return SCREEN_WIDTH;
     }
 
     public static int getGameHeight() {
-        return GAME_HEIGHT;
+        return SCREEN_HEIGHT;
     }
 
     public GamePane getGamePane() {

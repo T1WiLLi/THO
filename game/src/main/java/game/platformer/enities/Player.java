@@ -9,7 +9,6 @@ import java.util.TimerTask;
 import game.platformer.utils.LoadSave;
 import game.platformer.Game;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -19,7 +18,7 @@ public class Player extends Entity {
     private int playerAction = IDLE;
     private boolean moving = false;
     private boolean left, up, down, right, jump, facingRight = true;
-    private float playerSpeed = 1.0f * Game.getScale();
+    private float playerSpeed = 0.75f * Game.getScale();
 
     private int[][] lvlData;
     private float xDrawOffset = 21 * Game.getScale();
@@ -166,14 +165,11 @@ public class Player extends Entity {
         } else {
             updateXPos(xSpeed);
         }
-
         moving = true;
     }
 
     private void jump() {
-        if (inAir) {
-            return;
-        } else {
+        if (!inAir) {
             inAir = true;
             airSpeed = jumpSpeed;
         }
@@ -228,7 +224,7 @@ public class Player extends Entity {
     }
 
     private void loadAnimations() {
-        Image img = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        Image img = LoadSave.getSprite(LoadSave.PLAYER_ATLAS);
         animations = new WritableImage[360 / 40][384 / 64];
         for (int i = 0; i < animations.length; i++) {
             for (int j = 0; j < animations[i].length; j++) {
@@ -249,6 +245,14 @@ public class Player extends Entity {
         up = false;
         down = false;
         right = false;
+    }
+
+    public void setRunning(boolean value) {
+        if (value) {
+            playerSpeed *= 2;
+        } else {
+            playerSpeed /= 2;
+        }
     }
 
     public boolean isLeft() {

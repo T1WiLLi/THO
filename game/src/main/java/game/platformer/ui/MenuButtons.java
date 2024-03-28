@@ -34,7 +34,7 @@ public class MenuButtons {
 
     private void loadImgs() {
         imgs = new WritableImage[3];
-        Image temp = LoadSave.getSpriteAtlas(LoadSave.MENU_BUTTONS);
+        Image temp = LoadSave.getSprite(LoadSave.MENU_BUTTONS);
         for (int i = 0; i < imgs.length; i++) {
             imgs[i] = new WritableImage(temp.getPixelReader(), i * B_WIDTH_DEFAULT, rowIndex * B_HEIGHT_DEFAULT,
                     B_WIDTH_DEFAULT, B_HEIGHT_DEFAULT);

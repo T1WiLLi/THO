@@ -17,7 +17,7 @@ public class LevelManager {
     }
 
     private void importOutsideSprites() {
-        Image img = LoadSave.getSpriteAtlas(LoadSave.LEVEL_ATLAS);
+        Image img = LoadSave.getSprite(LoadSave.LEVEL_ATLAS);
         levelSprite = new WritableImage[48];
 
         for (int i = 0; i < 4; i++) {

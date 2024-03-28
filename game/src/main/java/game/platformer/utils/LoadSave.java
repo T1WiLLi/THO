@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 
 public class LoadSave {
 
+    // sprite
     public static final String PLAYER_ATLAS = "sprite/player_sprites.png";
     public static final String LEVEL_ATLAS = "sprite/outside_sprites.png";
     public static final String LEVEL_ONE_DATA = "sprite/level_one_data.png";
@@ -19,7 +20,10 @@ public class LoadSave {
     public static final String MENU_BACKGROUND_IMAGE = "ui/menuBg.png";
     public static final String OPTIONS_BACKGROUND = "ui/options_background.png";
 
-    public static Image getSpriteAtlas(String filename) {
+    // misc
+    public static final String CURSOR = "misc/cursor.png";
+
+    public static Image getSprite(String filename) {
         Image img = null;
         String path = "/game/platformer/assets/" + filename;
         InputStream is = LoadSave.class.getResourceAsStream(path);
@@ -41,7 +45,7 @@ public class LoadSave {
 
     public static int[][] getLevelData(String filename) {
         int[][] lvlData = new int[Game.getTilesInHeight()][Game.getTilesInWidth()];
-        Image img = LoadSave.getSpriteAtlas(filename);
+        Image img = LoadSave.getSprite(filename);
         PixelReader pixelReader = img.getPixelReader();
         for (int j = 0; j < Game.getTilesInHeight(); j++) {
             for (int i = 0; i < Game.getTilesInWidth(); i++) {

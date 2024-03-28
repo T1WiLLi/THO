@@ -64,7 +64,6 @@ public class Playing extends State implements StateMethods {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY) {
-            System.out.println("Dash!");
             if (this.player.getDashValue() == 100) {
                 this.player.dash(0, e.getSceneX(), e.getSceneY());
             }
@@ -98,6 +97,9 @@ public class Playing extends State implements StateMethods {
             case SPACE:
                 this.player.setJump(true);
                 break;
+            case SHIFT:
+                this.player.setRunning(true);
+                break;
             case ESCAPE:
                 this.hud.clearCanvas();
                 this.hud.getTimer().stop();
@@ -119,6 +121,9 @@ public class Playing extends State implements StateMethods {
                 break;
             case SPACE:
                 this.player.setJump(false);
+                break;
+            case SHIFT:
+                this.player.setRunning(false);
                 break;
             default:
                 break;
