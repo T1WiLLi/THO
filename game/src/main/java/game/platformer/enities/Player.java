@@ -3,6 +3,9 @@ package game.platformer.enities;
 import static game.platformer.utils.Constants.PlayerConstants.*;
 import static game.platformer.utils.HelpMethods.*;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import game.platformer.utils.LoadSave;
 import game.platformer.Game;
 
@@ -15,7 +18,7 @@ public class Player extends Entity {
 
     private int playerAction = IDLE;
     private boolean moving = false;
-    private boolean left, up, down, right, jump;
+    private boolean left, up, down, right, jump, facingRight = true;
     private float playerSpeed = 1.0f * Game.getScale();
 
     private int[][] lvlData;
@@ -36,7 +39,7 @@ public class Player extends Entity {
     // Dash
     private float dash; // max 100 means we can dash, otherwise, it take 5s to recharge.
     private long lastDashTime = 0;
-    private final long RECHARGE_DURATION_MS = 5000;
+    private final long RECHARGE_DURATION_MS = 500;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -52,10 +55,18 @@ public class Player extends Entity {
         setAnimation();
     }
 
-    public void render(Canvas canvas) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.drawImage(animations[playerAction][animationIndex], hitbox.getX() - xDrawOffset, hitbox.getY() - yDrawOffset,
+    public void render(GraphicsContext gc) {
+        if (!facingRight) {
+            gc.save();
+            gc.scale(-1, 1);
+        }
+        gc.drawImage(animations[playerAction][animationIndex],
+                (facingRight ? hitbox.getX() - xDrawOffset : -(hitbox.getX() - xDrawOffset) - width),
+                hitbox.getY() - yDrawOffset,
                 width, height);
+        if (!facingRight) {
+            gc.restore();
+        }
     }
 
     private void updateDash(long currentTime) {
@@ -65,9 +76,49 @@ public class Player extends Entity {
     }
 
     private void performDash(double mouseX, double mouseY) {
-        // implement the logic to do the dash, we use the left click to dash, so we want
-        // to dash in that direction so we need to pass in either the mouseEvent or the
-        // mouse object directly
+        float originalSpeed = this.playerSpeed;
+        float originalJumpSpeed = this.jumpSpeed;
+        double deltaX = mouseX - hitbox.getX();
+        double deltaY = mouseY - hitbox.getY();
+        double distanceToMouse = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        float dirX = (float) (deltaX / distanceToMouse);
+        float dirY = (float) (deltaY / distanceToMouse);
+
+        this.playerSpeed *= 5;
+        this.jumpSpeed *= 5;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                playerSpeed = originalSpeed;
+                jumpSpeed = originalJumpSpeed;
+                timer.cancel();
+            }
+        }, 50);
+
+        TimerTask dashTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (canMoveHere((float) (hitbox.getX() + dirX * playerSpeed),
+                        (float) (hitbox.getY() + dirY * playerSpeed),
+                        (float) hitbox.getWidth(), (float) hitbox.getHeight(), lvlData)) {
+                    hitbox.setX(hitbox.getX() + dirX * playerSpeed);
+                    hitbox.setY(hitbox.getY() + dirY * playerSpeed);
+                }
+
+                if (!isEntityOnFloor(hitbox, lvlData)) {
+                    inAir = true;
+                }
+
+                float speedDecrement = (originalSpeed - playerSpeed) / 50f;
+                playerSpeed += speedDecrement;
+            }
+        };
+
+        long period = (long) (1000.0 / 200);
+        timer.scheduleAtFixedRate(dashTask, 0, period);
     }
 
     private void updatePos() {
@@ -84,9 +135,11 @@ public class Player extends Entity {
 
         if (left) {
             xSpeed -= playerSpeed;
+            facingRight = false;
         }
         if (right) {
             xSpeed += playerSpeed;
+            facingRight = true;
         }
 
         if (!inAir) {

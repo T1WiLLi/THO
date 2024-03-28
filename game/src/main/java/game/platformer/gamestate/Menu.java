@@ -48,6 +48,8 @@ public class Menu extends State implements StateMethods {
 
     @Override
     public void render(GraphicsContext gc) {
+        gc.clearRect(0, 0, this.game.getGamePane().getCanvas().getWidth(),
+                this.game.getGamePane().getCanvas().getHeight());
         gc.drawImage(menuBg, 0, 0, Game.getGameWidth(), Game.getGameHeight());
         gc.drawImage(backgroundImage, menuX, menuY, menuWidth, menuHeight);
         for (MenuButtons menuButton : buttons) {

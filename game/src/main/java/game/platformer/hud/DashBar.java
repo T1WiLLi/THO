@@ -30,8 +30,7 @@ public class DashBar {
 
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-        String healthLabel = "Dash Progression: " + (int) (player.getDashValue()) + " / "
-                + (int) (player.getDashValue());
-        gc.fillText(healthLabel, barX, (barY + (barHeight / 2)) + 3);
+        String healthLabel = "Dash Progression: " + (int) (player.getDashValue()) + " / 100";
+        gc.fillText(healthLabel, barX + (barWidth / 2), (barY + (barHeight / 2)) + 3);
     }
 }

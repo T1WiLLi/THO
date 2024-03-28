@@ -19,20 +19,20 @@ public class Playing extends State implements StateMethods {
 
     public Playing(Game game) {
         super(game);
-        gamePanel = game.getGamePane();
+        this.gamePanel = game.getGamePane();
         initClasses();
     }
 
     private void initClasses() {
-        levelManager = new LevelManager(game);
-        player = new Player(200, 200, (int) (64 * Game.getScale()), (int) (40 * Game.getScale()));
-        player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+        this.levelManager = new LevelManager(game);
+        this.player = new Player(200, 200, (int) (64 * Game.getScale()), (int) (40 * Game.getScale()));
+        this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
         this.hud = new HudPane(Game.getGameWidth(), Game.getGameHeight(), this.player);
-        this.gamePanel.getChildren().addAll(hud);
+        this.gamePanel.getChildren().addAll(this.hud);
     }
 
     public void windowsFocusLost() {
-        player.resetDirBooleans();
+        this.player.resetDirBooleans();
     }
 
     public Player getPlayer() {
@@ -41,16 +41,20 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void update() {
-        player.update();
+        if (!this.hud.getTimer().isRunning()) {
+            this.hud.getTimer().start();
+        }
+        this.hud.update();
+        this.player.update();
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        hud.render();
-        gamePanel.getCanvas().getGraphicsContext2D().clearRect(0, 0, gamePanel.getCanvas().getWidth(),
-                gamePanel.getCanvas().getHeight());
-        levelManager.render(gamePanel.getCanvas().getGraphicsContext2D());
-        player.render(gamePanel.getCanvas());
+        this.hud.render();
+        this.gamePanel.getCanvas().getGraphicsContext2D().clearRect(0, 0, this.gamePanel.getCanvas().getWidth(),
+                this.gamePanel.getCanvas().getHeight());
+        this.levelManager.render(this.gamePanel.getCanvas().getGraphicsContext2D());
+        this.player.render(this.gamePanel.getGraphicsContext());
     }
 
     @Override
@@ -61,8 +65,8 @@ public class Playing extends State implements StateMethods {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY) {
             System.out.println("Dash!");
-            if (player.getDashValue() == 100) {
-                player.dash(0, e.getSceneX(), e.getSceneY());
+            if (this.player.getDashValue() == 100) {
+                this.player.dash(0, e.getSceneX(), e.getSceneY());
             }
         }
     }
@@ -86,15 +90,17 @@ public class Playing extends State implements StateMethods {
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
             case A:
-                player.setLeft(true);
+                this.player.setLeft(true);
                 break;
             case D:
-                player.setRight(true);
+                this.player.setRight(true);
                 break;
             case SPACE:
-                player.setJump(true);
+                this.player.setJump(true);
                 break;
             case ESCAPE:
+                this.hud.clearCanvas();
+                this.hud.getTimer().stop();
                 GameState.state = GameState.MENU;
                 break;
             default:
@@ -106,13 +112,13 @@ public class Playing extends State implements StateMethods {
     public void keyReleased(KeyEvent e) {
         switch (e.getCode()) {
             case A:
-                player.setLeft(false);
+                this.player.setLeft(false);
                 break;
             case D:
-                player.setRight(false);
+                this.player.setRight(false);
                 break;
             case SPACE:
-                player.setJump(false);
+                this.player.setJump(false);
                 break;
             default:
                 break;
