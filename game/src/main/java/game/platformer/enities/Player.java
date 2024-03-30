@@ -81,6 +81,12 @@ public class Player extends Entity {
         double deltaY = mouseY - hitbox.getY();
         double distanceToMouse = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
+        if (deltaX > (hitbox.getX() - mouseX)) {
+            facingRight = true;
+        } else {
+            facingRight = false;
+        }
+
         float dirX = (float) (deltaX / distanceToMouse);
         float dirY = (float) (deltaY / distanceToMouse);
 

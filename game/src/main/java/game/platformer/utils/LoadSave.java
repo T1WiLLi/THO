@@ -2,7 +2,6 @@ package game.platformer.utils;
 
 import java.io.InputStream;
 
-import game.platformer.Game;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
@@ -11,7 +10,7 @@ public class LoadSave {
 
     // sprite
     public static final String PLAYER_ATLAS = "sprite/player_sprites.png";
-    public static final String LEVEL_ATLAS = "sprite/outside_sprites.png";
+    public static final String LEVEL_ATLAS = "sprite/outside_sprite.png";
     public static final String LEVEL_ONE_DATA = "sprite/level_one_data_long.png";
 
     // ui
@@ -22,6 +21,7 @@ public class LoadSave {
 
     // misc
     public static final String CURSOR = "misc/cursor.png";
+    public static final String ICON = "misc/icon.jpg";
 
     public static Image getSprite(String filename) {
         Image img = null;

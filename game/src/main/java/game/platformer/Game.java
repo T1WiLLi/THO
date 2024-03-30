@@ -73,6 +73,7 @@ public class Game extends Application implements Runnable {
 
         gameStage.setScene(gameScene);
         gameStage.setTitle("My First Plateformer!");
+        gameStage.getIcons().add(LoadSave.getSprite(LoadSave.ICON));
         gameStage.centerOnScreen();
         gameStage.show();
         gameStage.focusedProperty().addListener(new ChangeListener<Boolean>() {
