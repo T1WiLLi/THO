@@ -12,7 +12,7 @@ public class LoadSave {
     // sprite
     public static final String PLAYER_ATLAS = "sprite/player_sprites.png";
     public static final String LEVEL_ATLAS = "sprite/outside_sprites.png";
-    public static final String LEVEL_ONE_DATA = "sprite/level_one_data.png";
+    public static final String LEVEL_ONE_DATA = "sprite/level_one_data_long.png";
 
     // ui
     public static final String MENU_BUTTONS = "ui/button_atlas.png";
@@ -44,11 +44,12 @@ public class LoadSave {
     }
 
     public static int[][] getLevelData(String filename) {
-        int[][] lvlData = new int[Game.getTilesInHeight()][Game.getTilesInWidth()];
         Image img = LoadSave.getSprite(filename);
+        int[][] lvlData = new int[(int) img.getHeight()][(int) img.getWidth()];
+
         PixelReader pixelReader = img.getPixelReader();
-        for (int j = 0; j < Game.getTilesInHeight(); j++) {
-            for (int i = 0; i < Game.getTilesInWidth(); i++) {
+        for (int j = 0; j < img.getHeight(); j++) {
+            for (int i = 0; i < img.getWidth(); i++) {
                 Color color = pixelReader.getColor(i, j);
                 int value = (int) (color.getRed() * 255);
                 if (value >= 48) {

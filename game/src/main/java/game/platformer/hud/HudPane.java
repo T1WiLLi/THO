@@ -26,7 +26,7 @@ public class HudPane extends Canvas {
     }
 
     public void render() {
-        this.gc.clearRect(0, 0, Game.getGameWidth(), Game.getGameHeight());
+        this.gc.clearRect(0, 0, Game.getScreenWidth(), Game.getScreenHeight());
         this.dashBar.render(this.gc, this.getWidth(), this.getHeight());
         this.timer.render(this.gc);
     }

@@ -212,11 +212,11 @@ public class Game extends Application implements Runnable {
         return TILES_SIZE;
     }
 
-    public static int getGameWidth() {
+    public static int getScreenWidth() {
         return SCREEN_WIDTH;
     }
 
-    public static int getGameHeight() {
+    public static int getScreenHeight() {
         return SCREEN_HEIGHT;
     }
 

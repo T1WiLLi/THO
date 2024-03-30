@@ -54,15 +54,15 @@ public class Player extends Entity {
         setAnimation();
     }
 
-    public void render(GraphicsContext gc) {
+    public void render(GraphicsContext gc, int xLvlOffset) {
         if (!facingRight) {
             gc.save();
             gc.scale(-1, 1);
         }
         gc.drawImage(animations[playerAction][animationIndex],
-                (facingRight ? hitbox.getX() - xDrawOffset : -(hitbox.getX() - xDrawOffset) - width),
-                hitbox.getY() - yDrawOffset,
-                width, height);
+                ((facingRight) ? (int) (hitbox.getX() - xDrawOffset) - xLvlOffset
+                        : -(hitbox.getX() - xDrawOffset - xLvlOffset) - width),
+                (int) (hitbox.getY() - yDrawOffset), width, height);
         if (!facingRight) {
             gc.restore();
         }
@@ -74,10 +74,10 @@ public class Player extends Entity {
         dash = (float) Math.min(100, 100 * percentageElapsed);
     }
 
-    private void performDash(double mouseX, double mouseY) {
+    private void performDash(double mouseX, double mouseY, int xLvlOffset) {
         float originalSpeed = this.playerSpeed;
         float originalJumpSpeed = this.jumpSpeed;
-        double deltaX = mouseX - hitbox.getX();
+        double deltaX = (mouseX + xLvlOffset) - hitbox.getX();
         double deltaY = mouseY - hitbox.getY();
         double distanceToMouse = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
@@ -295,10 +295,10 @@ public class Player extends Entity {
         return this.jump;
     }
 
-    public void dash(float value, double mouseX, double mouseY) {
+    public void dash(float value, double mouseX, double mouseY, int xLvlOffset) {
         this.dash = value;
         this.lastDashTime = System.currentTimeMillis();
-        performDash(mouseX, mouseY);
+        performDash(mouseX, mouseY, xLvlOffset);
     }
 
     public float getDashValue() {

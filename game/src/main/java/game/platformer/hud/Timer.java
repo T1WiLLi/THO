@@ -75,8 +75,8 @@ public class Timer {
 
         String timeString = String.format("%02d:%02d:%03d", minutes, seconds, milliseconds);
 
-        double x = Game.getGameWidth() / 2;
-        double y = Game.getGameHeight() * 0.1;
+        double x = Game.getScreenWidth() / 2;
+        double y = Game.getScreenHeight() * 0.1;
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(timeString, x, y);

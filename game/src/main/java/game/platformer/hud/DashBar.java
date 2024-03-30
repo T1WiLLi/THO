@@ -3,8 +3,6 @@ package game.platformer.hud;
 import game.platformer.enities.Player;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class DashBar {
 

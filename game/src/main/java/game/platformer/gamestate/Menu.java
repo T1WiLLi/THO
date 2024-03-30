@@ -29,14 +29,14 @@ public class Menu extends State implements StateMethods {
         backgroundImage = LoadSave.getSprite(LoadSave.MENU_BACKGROUND);
         menuWidth = (int) (backgroundImage.getWidth() * Game.getScale());
         menuHeight = (int) (backgroundImage.getHeight() * Game.getScale());
-        menuX = Game.getGameWidth() / 2 - menuWidth / 2;
+        menuX = Game.getScreenWidth() / 2 - menuWidth / 2;
         menuY = (int) (30 * Game.getScale());
     }
 
     private void loadButtons() {
-        buttons[0] = new MenuButtons(Game.getGameWidth() / 2, (int) (150 * Game.getScale()), 0, GameState.PLAYING);
-        buttons[1] = new MenuButtons(Game.getGameWidth() / 2, (int) (220 * Game.getScale()), 1, GameState.OPTIONS);
-        buttons[2] = new MenuButtons(Game.getGameWidth() / 2, (int) (290 * Game.getScale()), 2, GameState.QUIT);
+        buttons[0] = new MenuButtons(Game.getScreenWidth() / 2, (int) (150 * Game.getScale()), 0, GameState.PLAYING);
+        buttons[1] = new MenuButtons(Game.getScreenWidth() / 2, (int) (220 * Game.getScale()), 1, GameState.OPTIONS);
+        buttons[2] = new MenuButtons(Game.getScreenWidth() / 2, (int) (290 * Game.getScale()), 2, GameState.QUIT);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Menu extends State implements StateMethods {
     public void render(GraphicsContext gc) {
         gc.clearRect(0, 0, this.game.getGamePane().getCanvas().getWidth(),
                 this.game.getGamePane().getCanvas().getHeight());
-        gc.drawImage(menuBg, 0, 0, Game.getGameWidth(), Game.getGameHeight());
+        gc.drawImage(menuBg, 0, 0, Game.getScreenWidth(), Game.getScreenHeight());
         gc.drawImage(backgroundImage, menuX, menuY, menuWidth, menuHeight);
         for (MenuButtons menuButton : buttons) {
             menuButton.render(gc);

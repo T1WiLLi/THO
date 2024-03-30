@@ -5,6 +5,7 @@ import game.platformer.GamePane;
 import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
+import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -17,6 +18,13 @@ public class Playing extends State implements StateMethods {
     private HudPane hud;
     private GamePane gamePanel;
 
+    private int xLvlOffset;
+    private int leftBorder = (int) (0.5 * Game.getScreenWidth());
+    private int rightBorder = (int) (0.5 * Game.getScreenWidth());
+    private int lvlTilesWide = LoadSave.getLevelData(LoadSave.LEVEL_ONE_DATA)[0].length;
+    private int maxTilesOffset = lvlTilesWide - Game.getTilesInWidth();
+    private int maxLvlOffsetX = maxTilesOffset * Game.getTilesSize();
+
     public Playing(Game game) {
         super(game);
         this.gamePanel = game.getGamePane();
@@ -27,7 +35,7 @@ public class Playing extends State implements StateMethods {
         this.levelManager = new LevelManager(game);
         this.player = new Player(200, 200, (int) (64 * Game.getScale()), (int) (40 * Game.getScale()));
         this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
-        this.hud = new HudPane(Game.getGameWidth(), Game.getGameHeight(), this.player);
+        this.hud = new HudPane(Game.getScreenWidth(), Game.getScreenHeight(), this.player);
         this.gamePanel.getChildren().addAll(this.hud);
     }
 
@@ -46,6 +54,7 @@ public class Playing extends State implements StateMethods {
         }
         this.hud.update();
         this.player.update();
+        checkCloseToBorder();
     }
 
     @Override
@@ -53,8 +62,25 @@ public class Playing extends State implements StateMethods {
         this.hud.render();
         this.gamePanel.getCanvas().getGraphicsContext2D().clearRect(0, 0, this.gamePanel.getCanvas().getWidth(),
                 this.gamePanel.getCanvas().getHeight());
-        this.levelManager.render(this.gamePanel.getCanvas().getGraphicsContext2D());
-        this.player.render(this.gamePanel.getGraphicsContext());
+        this.levelManager.render(this.gamePanel.getCanvas().getGraphicsContext2D(), xLvlOffset);
+        this.player.render(this.gamePanel.getGraphicsContext(), xLvlOffset);
+    }
+
+    private void checkCloseToBorder() {
+        int playerX = (int) this.player.getHitbox().getX();
+        int diff = playerX - xLvlOffset;
+
+        if (diff > rightBorder) {
+            xLvlOffset += diff - rightBorder;
+        } else if (diff < leftBorder) {
+            xLvlOffset += diff - leftBorder;
+        }
+
+        if (xLvlOffset > maxLvlOffsetX) {
+            xLvlOffset = maxLvlOffsetX;
+        } else if (xLvlOffset < 0) {
+            xLvlOffset = 0;
+        }
     }
 
     @Override
@@ -65,7 +91,7 @@ public class Playing extends State implements StateMethods {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY) {
             if (this.player.getDashValue() == 100) {
-                this.player.dash(0, e.getSceneX(), e.getSceneY());
+                this.player.dash(0, e.getSceneX(), e.getSceneY(), xLvlOffset);
             }
         }
     }
