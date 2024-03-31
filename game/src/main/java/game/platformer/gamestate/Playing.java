@@ -32,7 +32,7 @@ public class Playing extends State implements StateMethods {
     }
 
     private void initClasses() {
-        this.levelManager = new LevelManager(game);
+        this.levelManager = new LevelManager(LoadSave.LEVEL_ATLAS, LoadSave.LEVEL_ONE_DATA, 48, 12, 4);
         this.player = new Player(200, 200, (int) (64 * Game.getScale()), (int) (40 * Game.getScale()));
         this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
         this.hud = new HudPane(Game.getScreenWidth(), Game.getScreenHeight(), this.player);
@@ -47,6 +47,8 @@ public class Playing extends State implements StateMethods {
         return this.player;
     }
 
+    // 27, 15
+
     @Override
     public void update() {
         if (!this.hud.getTimer().isRunning()) {
@@ -60,9 +62,9 @@ public class Playing extends State implements StateMethods {
     @Override
     public void render(GraphicsContext gc) {
         this.hud.render();
-        this.gamePanel.getCanvas().getGraphicsContext2D().clearRect(0, 0, this.gamePanel.getCanvas().getWidth(),
+        this.gamePanel.getGraphicsContext().clearRect(0, 0, this.gamePanel.getCanvas().getWidth(),
                 this.gamePanel.getCanvas().getHeight());
-        this.levelManager.render(this.gamePanel.getCanvas().getGraphicsContext2D(), xLvlOffset);
+        this.levelManager.render(this.gamePanel.getGraphicsContext(), xLvlOffset);
         this.player.render(this.gamePanel.getGraphicsContext(), xLvlOffset);
     }
 

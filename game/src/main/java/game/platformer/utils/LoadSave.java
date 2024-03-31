@@ -11,7 +11,13 @@ public class LoadSave {
     // sprite
     public static final String PLAYER_ATLAS = "sprite/player_sprites.png";
     public static final String LEVEL_ATLAS = "sprite/outside_sprite.png";
-    public static final String LEVEL_ONE_DATA = "sprite/level_one_data_long.png";
+
+    // Levels
+    public static final String LEVEL_ONE_DATA = "leveldata/level_one_data_long.png";
+    public static final String PROPS_DATA = "leveldata/level_one_props_data.png";
+
+    // Props
+    public static final String PROPS = "props/tree.png";
 
     // ui
     public static final String MENU_BUTTONS = "ui/button_atlas.png";
