@@ -12,9 +12,8 @@ public class HudPane extends Canvas {
     private DashBar dashBar;
     private Timer timer;
 
-    public HudPane(float screenWidth, float screenHeight, Player player) {
-        setWidth(screenWidth);
-        setHeight(screenHeight);
+    public HudPane(Player player) {
+        super(Game.getScreenWidth(), Game.getScreenHeight());
         this.player = player;
         this.gc = getGraphicsContext2D();
         this.dashBar = new DashBar(this.player);

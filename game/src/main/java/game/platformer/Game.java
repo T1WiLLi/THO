@@ -72,7 +72,7 @@ public class Game extends Application implements Runnable {
         gamePanel.requestFocus();
 
         gameStage.setScene(gameScene);
-        gameStage.setTitle("My First Plateformer!");
+        gameStage.setTitle("The Hooded One");
         gameStage.getIcons().add(LoadSave.getSprite(LoadSave.ICON));
         gameStage.centerOnScreen();
         gameStage.show();

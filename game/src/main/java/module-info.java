@@ -11,4 +11,5 @@ module game.platformer {
     exports game.platformer.levels;
     exports game.platformer.gamestate;
     exports game.platformer.ui;
+    exports game.platformer.hud;
 }

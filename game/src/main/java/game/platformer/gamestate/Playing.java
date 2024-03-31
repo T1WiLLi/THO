@@ -1,10 +1,11 @@
 package game.platformer.gamestate;
 
 import game.platformer.Game;
-import game.platformer.GamePane;
 import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
+import game.platformer.ui.Background;
+import game.platformer.ui.PauseOverlay;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -16,7 +17,9 @@ public class Playing extends State implements StateMethods {
     private Player player;
     private LevelManager levelManager;
     private HudPane hud;
-    private GamePane gamePanel;
+    private PauseOverlay pauseOverlay;
+    private Background backgroundManager;
+    private boolean paused;
 
     private int xLvlOffset;
     private int leftBorder = (int) (0.5 * Game.getScreenWidth());
@@ -27,45 +30,48 @@ public class Playing extends State implements StateMethods {
 
     public Playing(Game game) {
         super(game);
-        this.gamePanel = game.getGamePane();
         initClasses();
     }
 
     private void initClasses() {
+        this.pauseOverlay = new PauseOverlay(this);
         this.levelManager = new LevelManager(LoadSave.LEVEL_ATLAS, LoadSave.LEVEL_ONE_DATA, 48, 12, 4);
         this.player = new Player(200, 200, (int) (64 * Game.getScale()), (int) (40 * Game.getScale()));
         this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
-        this.hud = new HudPane(Game.getScreenWidth(), Game.getScreenHeight(), this.player);
-        this.gamePanel.getChildren().addAll(this.hud);
+        this.hud = new HudPane(this.player);
+        this.backgroundManager = new Background();
+        this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay);
     }
 
     public void windowsFocusLost() {
         this.player.resetDirBooleans();
     }
 
-    public Player getPlayer() {
-        return this.player;
-    }
-
-    // 27, 15
-
     @Override
     public void update() {
-        if (!this.hud.getTimer().isRunning()) {
-            this.hud.getTimer().start();
+        if (!paused) {
+            if (!this.hud.getTimer().isRunning()) {
+                this.hud.getTimer().start();
+            }
+            this.hud.update();
+            this.player.update();
+            checkCloseToBorder();
+        } else {
+            pauseOverlay.update();
         }
-        this.hud.update();
-        this.player.update();
-        checkCloseToBorder();
     }
 
     @Override
     public void render(GraphicsContext gc) {
+        gc.clearRect(0, 0, this.game.getGamePane().getCanvas().getWidth(),
+                this.game.getGamePane().getCanvas().getHeight());
+        this.backgroundManager.render(gc, xLvlOffset);
+        if (paused) {
+            pauseOverlay.render();
+        }
         this.hud.render();
-        this.gamePanel.getGraphicsContext().clearRect(0, 0, this.gamePanel.getCanvas().getWidth(),
-                this.gamePanel.getCanvas().getHeight());
-        this.levelManager.render(this.gamePanel.getGraphicsContext(), xLvlOffset);
-        this.player.render(this.gamePanel.getGraphicsContext(), xLvlOffset);
+        this.levelManager.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
+        this.player.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
     }
 
     private void checkCloseToBorder() {
@@ -91,26 +97,35 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-            if (this.player.getDashValue() == 100) {
-                this.player.dash(0, e.getSceneX(), e.getSceneY(), xLvlOffset);
+        if (this.paused) {
+            this.pauseOverlay.mousePressed(e);
+        } else {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                if (this.player.getDashValue() == 100) {
+                    this.player.dash(0, e.getSceneX(), e.getSceneY(), xLvlOffset);
+                }
             }
         }
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    @Override
     public void mouseReleased(MouseEvent e) {
-
+        if (this.paused) {
+            this.pauseOverlay.mouseReleased(e);
+        }
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
+        if (this.paused) {
+            this.pauseOverlay.mouseMoved(e);
+        }
+    }
 
+    public void mouseDragged(MouseEvent e) {
+        if (this.paused) {
+            this.pauseOverlay.mouseDragged(e);
+        }
     }
 
     @Override
@@ -129,9 +144,8 @@ public class Playing extends State implements StateMethods {
                 this.player.setRunning(true);
                 break;
             case ESCAPE:
-                this.hud.clearCanvas();
-                this.hud.getTimer().stop();
-                GameState.state = GameState.MENU;
+                paused = !paused;
+                this.pauseOverlay.resetGraphicsContext();
                 break;
             default:
                 break;
@@ -157,4 +171,26 @@ public class Playing extends State implements StateMethods {
                 break;
         }
     }
+
+    public HudPane getHudPane() {
+        return this.hud;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public void setPause(boolean pause) {
+        this.paused = pause;
+    }
+
+    public boolean getPause() {
+        return this.paused;
+    }
 }
+
+/*
+ * this.hud.clearCanvas();
+ * this.hud.getTimer().stop();
+ * GameState.state = GameState.MENU;
+ */

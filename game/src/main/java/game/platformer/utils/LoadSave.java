@@ -15,6 +15,9 @@ public class LoadSave {
     // Levels
     public static final String LEVEL_ONE_DATA = "leveldata/level_one_data_long.png";
     public static final String PROPS_DATA = "leveldata/level_one_props_data.png";
+    public static final String BACKGROUND_LAYER_1 = "background/background_layer_1.png";
+    public static final String BACKGROUND_LAYER_2 = "background/background_layer_2.png";
+    public static final String BACKGROUND_LAYER_3 = "background/background_layer_3.png";
 
     // Props
     public static final String PROPS = "props/tree.png";
@@ -24,10 +27,15 @@ public class LoadSave {
     public static final String MENU_BACKGROUND = "ui/menu_background.png";
     public static final String MENU_BACKGROUND_IMAGE = "ui/menuBg.png";
     public static final String OPTIONS_BACKGROUND = "ui/options_background.png";
+    public static final String PAUSE_BACKGROUND = "ui/pause_menu.png";
+    public static final String SOUND_BUTTON = "ui/sound_button.png";
+    public static final String URM_BUTTONS = "ui/urm_buttons.png";
+    public static final String VOLUME_BUTTONS = "ui/volume_buttons.png";
+    public static final String DASH_BAR_SPRITE = "ui/energy_bar.png";
 
     // misc
     public static final String CURSOR = "misc/cursor.png";
-    public static final String ICON = "misc/icon.jpg";
+    public static final String ICON = "misc/head-640.png";
 
     public static Image getSprite(String filename) {
         Image img = null;

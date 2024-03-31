@@ -44,18 +44,11 @@ public class Timer {
         }
     }
 
-    public void restart() {
-        startTime = System.currentTimeMillis();
-        stopTime = 0;
-        elapsedTime = 0;
-        running = true;
-    }
-
-    public void reset() {
-        startTime = 0;
-        stopTime = 0;
-        elapsedTime = 0;
-        running = false;
+    public void pause() {
+        running = !running;
+        if (running) {
+            startTime = System.currentTimeMillis() - elapsedTime;
+        }
     }
 
     public void update() {
