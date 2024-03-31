@@ -44,6 +44,13 @@ public class Timer {
         }
     }
 
+    public void restart() {
+        startTime = System.currentTimeMillis();
+        stopTime = 0;
+        elapsedTime = 0;
+        running = true;
+    }
+
     public void pause() {
         running = !running;
         if (running) {

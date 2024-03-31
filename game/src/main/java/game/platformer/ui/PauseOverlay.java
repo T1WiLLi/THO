@@ -17,7 +17,7 @@ public class PauseOverlay extends Canvas {
 
     private Image backgroundImg;
     private int bgX, bgY, bgW, bgH;
-    private UrmButton menuB, unpauseB, saveB;
+    private UrmButton menuB, unpauseB, restartB;
     private SoundButton musicButton, sfxButton;
     private VolumeButton volumeButton;
 
@@ -36,7 +36,7 @@ public class PauseOverlay extends Canvas {
 
     public void update() {
         this.menuB.update();
-        this.saveB.update();
+        this.restartB.update();
         this.unpauseB.update();
         this.musicButton.update();
         this.sfxButton.update();
@@ -47,7 +47,7 @@ public class PauseOverlay extends Canvas {
         this.gc.clearRect(0, 0, getWidth(), getHeight());
         this.gc.drawImage(this.backgroundImg, this.bgX, this.bgY, this.bgW, this.bgH);
         this.menuB.render(this.gc);
-        this.saveB.render(this.gc);
+        this.restartB.render(this.gc);
         this.unpauseB.render(this.gc);
         this.musicButton.render(this.gc);
         this.sfxButton.render(this.gc);
@@ -69,7 +69,7 @@ public class PauseOverlay extends Canvas {
         int bY = (int) (325 * Game.getScale());
 
         this.menuB = new UrmButton(menuX, bY, URM_SIZE, URM_SIZE, 2);
-        this.saveB = new UrmButton(saveX, bY, URM_SIZE, URM_SIZE, 1);
+        this.restartB = new UrmButton(saveX, bY, URM_SIZE, URM_SIZE, 1);
         this.unpauseB = new UrmButton(unpauseX, bY, URM_SIZE, URM_SIZE, 0);
     }
 
@@ -109,8 +109,8 @@ public class PauseOverlay extends Canvas {
             this.menuB.setMousePressed(true);
         } else if (isIn(e, this.unpauseB)) {
             this.unpauseB.setMousePressed(true);
-        } else if (isIn(e, this.saveB)) {
-            this.saveB.setMousePressed(true);
+        } else if (isIn(e, this.restartB)) {
+            this.restartB.setMousePressed(true);
         }
     }
 
@@ -134,9 +134,10 @@ public class PauseOverlay extends Canvas {
             if (this.unpauseB.isMousePressed()) {
                 this.playing.setPause(false);
             }
-        } else if (isIn(e, this.saveB)) {
-            if (this.saveB.isMousePressed()) {
-                System.out.println("Restart level!");
+        } else if (isIn(e, this.restartB)) {
+            if (this.restartB.isMousePressed()) {
+                playing.resetAll();
+                playing.unpauseGame();
             }
         }
 
@@ -144,7 +145,7 @@ public class PauseOverlay extends Canvas {
         this.sfxButton.resetBools();
         this.volumeButton.resetBools();
         this.menuB.resetBools();
-        this.saveB.resetBools();
+        this.restartB.resetBools();
         this.unpauseB.resetBools();
         resetGraphicsContext();
     }
@@ -154,7 +155,7 @@ public class PauseOverlay extends Canvas {
         this.sfxButton.setMouseOver(false);
         this.volumeButton.setMouseOver(false);
         this.menuB.setMouseOver(false);
-        this.saveB.setMouseOver(false);
+        this.restartB.setMouseOver(false);
         this.unpauseB.setMouseOver(false);
 
         if (isIn(e, this.musicButton)) {
@@ -167,8 +168,8 @@ public class PauseOverlay extends Canvas {
             this.menuB.setMouseOver(true);
         } else if (isIn(e, this.unpauseB)) {
             this.unpauseB.setMouseOver(true);
-        } else if (isIn(e, this.saveB)) {
-            this.saveB.setMouseOver(true);
+        } else if (isIn(e, this.restartB)) {
+            this.restartB.setMouseOver(true);
         }
     }
 

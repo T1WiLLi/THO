@@ -6,10 +6,12 @@ import static game.platformer.utils.HelpMethods.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import game.platformer.utils.HelpMethods;
 import game.platformer.utils.LoadSave;
 import game.platformer.Game;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Light.Point;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
@@ -45,6 +47,13 @@ public class Player extends Entity {
         this.dash = 100;
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.getScale()), (int) (27 * Game.getScale()));
+    }
+
+    public void setSpawn(Point spawn) {
+        this.x = (float) spawn.getX();
+        this.y = (float) spawn.getY();
+        hitbox.setX(this.x);
+        hitbox.setY(this.y);
     }
 
     public void update() {
@@ -309,5 +318,20 @@ public class Player extends Entity {
 
     public float getDashValue() {
         return this.dash;
+    }
+
+    public void resetAll() {
+        resetDirBooleans();
+        inAir = false;
+        this.facingRight = true;
+        moving = false;
+        playerAction = IDLE;
+
+        hitbox.setX(x);
+        hitbox.setY(y);
+
+        if (!HelpMethods.isEntityOnFloor(hitbox, lvlData)) {
+            inAir = true;
+        }
     }
 }

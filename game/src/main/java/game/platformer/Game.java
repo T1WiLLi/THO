@@ -109,7 +109,7 @@ public class Game extends Application implements Runnable {
     }
 
     private void initClasses() {
-        this.gamePanel = new GamePane(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.gamePanel = new GamePane(this, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.inputHandler = new InputHandler(this);
         this.mouseHandler = new MouseHandler(this);
         this.playing = new Playing(this);
@@ -138,7 +138,7 @@ public class Game extends Application implements Runnable {
         });
     }
 
-    private void render() {
+    public void render() {
         Platform.runLater(() -> {
             switch (GameState.state) {
                 case MENU -> menu.render(this.gamePanel.getGraphicsContext());

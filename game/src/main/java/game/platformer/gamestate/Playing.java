@@ -5,6 +5,7 @@ import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
 import game.platformer.ui.Background;
+import game.platformer.ui.LevelCompletedOverlay;
 import game.platformer.ui.PauseOverlay;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,8 +19,12 @@ public class Playing extends State implements StateMethods {
     private LevelManager levelManager;
     private HudPane hud;
     private PauseOverlay pauseOverlay;
+    private LevelCompletedOverlay levelCompletedOverlay;
     private Background backgroundManager;
+
     private boolean paused;
+    private boolean gameOver = false;
+    private boolean lvlCompleted = true;
 
     private int xLvlOffset;
     private int leftBorder = (int) (0.5 * Game.getScreenWidth());
@@ -35,8 +40,10 @@ public class Playing extends State implements StateMethods {
 
     private void initClasses() {
         this.pauseOverlay = new PauseOverlay(this);
+        this.levelCompletedOverlay = new LevelCompletedOverlay(this);
         this.levelManager = new LevelManager(LoadSave.LEVEL_ATLAS, LoadSave.LEVEL_ONE_DATA, 48, 12, 4);
-        this.player = new Player(200, 200, (int) (64 * Game.getScale()), (int) (40 * Game.getScale()));
+        this.player = new Player(100 * Game.getScale(), 200 * Game.getScale(), (int) (64 * Game.getScale()),
+                (int) (40 * Game.getScale()));
         this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
         this.hud = new HudPane(this.player);
         this.backgroundManager = new Background();
@@ -49,15 +56,17 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void update() {
-        if (!paused) {
+        if (paused) {
+            pauseOverlay.update();
+        } else if (lvlCompleted) {
+            levelCompletedOverlay.update();
+        } else if (!gameOver) {
             if (!this.hud.getTimer().isRunning()) {
                 this.hud.getTimer().start();
             }
             this.hud.update();
             this.player.update();
             checkCloseToBorder();
-        } else {
-            pauseOverlay.update();
         }
     }
 
@@ -72,6 +81,10 @@ public class Playing extends State implements StateMethods {
         this.hud.render();
         this.levelManager.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
         this.player.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
+
+        if (lvlCompleted) {
+            levelCompletedOverlay.render(gc);
+        }
     }
 
     private void checkCloseToBorder() {
@@ -91,6 +104,14 @@ public class Playing extends State implements StateMethods {
         }
     }
 
+    public void resetAll() {
+        this.gameOver = false;
+        this.paused = false;
+        this.lvlCompleted = false;
+        this.hud.getTimer().restart();
+        this.player.resetAll();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
     }
@@ -99,6 +120,8 @@ public class Playing extends State implements StateMethods {
     public void mousePressed(MouseEvent e) {
         if (this.paused) {
             this.pauseOverlay.mousePressed(e);
+        } else if (lvlCompleted) {
+            this.levelCompletedOverlay.mousePressed(e);
         } else {
             if (e.getButton() == MouseButton.PRIMARY) {
                 if (this.player.getDashValue() == 100) {
@@ -112,6 +135,8 @@ public class Playing extends State implements StateMethods {
     public void mouseReleased(MouseEvent e) {
         if (this.paused) {
             this.pauseOverlay.mouseReleased(e);
+        } else if (lvlCompleted) {
+            this.levelCompletedOverlay.mouseReleased(e);
         }
     }
 
@@ -119,6 +144,8 @@ public class Playing extends State implements StateMethods {
     public void mouseMoved(MouseEvent e) {
         if (this.paused) {
             this.pauseOverlay.mouseMoved(e);
+        } else if (lvlCompleted) {
+            this.levelCompletedOverlay.mouseMoved(e);
         }
     }
 
@@ -143,7 +170,7 @@ public class Playing extends State implements StateMethods {
             case SHIFT:
                 this.player.setRunning(true);
                 break;
-            case ESCAPE:
+            case TAB:
                 paused = !paused;
                 this.pauseOverlay.resetGraphicsContext();
                 break;
@@ -170,6 +197,18 @@ public class Playing extends State implements StateMethods {
             default:
                 break;
         }
+    }
+
+    public void setLevelCompleted(boolean levelCompleted) {
+        this.lvlCompleted = levelCompleted;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public void unpauseGame() {
+        this.paused = false;
     }
 
     public HudPane getHudPane() {
