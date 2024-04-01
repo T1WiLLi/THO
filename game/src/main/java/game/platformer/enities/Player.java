@@ -8,7 +8,6 @@ import static game.platformer.utils.HelpMethods.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import game.platformer.utils.HelpMethods;
 import game.platformer.utils.LoadSave;
 import game.platformer.Game;
 import game.platformer.audio.AudioPlayer;
@@ -198,6 +197,10 @@ public class Player extends Entity {
         }
     }
 
+    public void kill() {
+        this.playing.setGameOver(true);
+    }
+
     private void resetInAir() {
         inAir = false;
         airSpeed = 0;
@@ -325,7 +328,7 @@ public class Player extends Entity {
         hitbox.setX(x);
         hitbox.setY(y);
 
-        if (!HelpMethods.isEntityOnFloor(hitbox, lvlData)) {
+        if (!isEntityOnFloor(hitbox, lvlData)) {
             inAir = true;
         }
     }

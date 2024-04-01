@@ -4,6 +4,7 @@ import game.platformer.Game;
 import game.platformer.enities.Player;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class HudPane extends Canvas {
 
@@ -36,5 +37,10 @@ public class HudPane extends Canvas {
 
     public Timer getTimer() {
         return this.timer;
+    }
+
+    public void darken() {
+        this.gc.setFill(Color.rgb(0, 0, 0, 0.5));
+        this.gc.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 }

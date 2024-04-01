@@ -75,8 +75,9 @@ public class AudioPlayer {
     }
 
     public void stopSong() {
-        if (songs[currentSongId].isActive())
+        if (songs[currentSongId].isActive()) {
             songs[currentSongId].stop();
+        }
     }
 
     public void setLevelSong(int lvlIndex) {

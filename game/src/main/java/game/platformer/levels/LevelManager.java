@@ -3,8 +3,10 @@ package game.platformer.levels;
 import java.util.ArrayList;
 
 import game.platformer.Game;
+import game.platformer.audio.AudioPlayer;
 import game.platformer.gamestate.GameState;
 import game.platformer.gamestate.Playing;
+import game.platformer.utils.HelpMethods;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -55,18 +57,27 @@ public class LevelManager {
             this.playing.setPause(false);
             this.playing.getHudPane().clearCanvas();
             this.playing.getHudPane().getTimer().stop();
+            this.playing.getGame().getAudioPlayer().stopSong();
             this.playing.setGameState(GameState.MENU);
         }
 
         Level newLevel = levels.get(lvlIndex);
+        this.playing.getGame().getAudioPlayer().setLevelSong(AudioPlayer.LEVEL_1);
         playing.getPlayer().loadLvlData(newLevel.getLevelData());
         playing.setMaxLvlOffset(newLevel.getLvlOffset());
+        playing.getObjectManager().loadObjects(newLevel);
     }
 
     private void buildAllLevels() {
         Image[] allLevels = LoadSave.getAllLevels();
         for (Image img : allLevels)
             this.levels.add(new Level(img));
+    }
+
+    public void update() {
+        if (HelpMethods.hasPlayerFinishedLevel(getCurrentLevel(), this.playing.getPlayer())) {
+            this.playing.setLevelCompleted(true);
+        }
     }
 
     public void render(GraphicsContext gc, int xLvlOffset) {

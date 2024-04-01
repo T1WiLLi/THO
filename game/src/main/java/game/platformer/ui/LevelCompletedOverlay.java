@@ -66,7 +66,6 @@ public class LevelCompletedOverlay {
         if (isIn(e, this.next)) {
             if (this.next.isMousePressed()) {
                 this.playing.loadNextLevel();
-                this.playing.getGame().getAudioPlayer().setLevelSong(AudioPlayer.LEVEL_1);
             }
         } else if (isIn(e, this.menu)) {
             if (this.menu.isMousePressed()) {

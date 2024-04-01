@@ -3,9 +3,6 @@ package game.platformer.utils;
 import game.platformer.Game;
 import game.platformer.enities.Player;
 import game.platformer.levels.Level;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.awt.Point;
@@ -27,23 +24,26 @@ public class HelpMethods {
 
     private static boolean isSolid(float x, float y, int[][] lvlData) {
         int maxWidth = lvlData[0].length * Game.getTilesSize();
-        if (x < 0 || x >= maxWidth) {
+        if (x < 0 || x >= maxWidth)
             return true;
-        }
-        if (y < 0 || y >= Game.getScreenHeight()) {
+        if (y < 0 || y >= Game.getScreenHeight())
             return true;
-        }
-
         float xIndex = x / Game.getTilesSize();
         float yIndex = y / Game.getTilesSize();
 
-        int value = lvlData[(int) yIndex][(int) xIndex];
+        return isTileSolid((int) xIndex, (int) yIndex, lvlData);
+    }
 
-        if (value >= 48 || value < 0 || value != 11) {
-            return true;
-        } else {
-            return false;
+    public static boolean isTileSolid(int xTile, int yTile, int[][] lvlData) {
+        int value = lvlData[yTile][xTile];
+
+        switch (value) {
+            case 11, 48, 49:
+                return false;
+            default:
+                return true;
         }
+
     }
 
     public static float getEntityXPosNextToWall(Rectangle hitbox, float xSpeed) {
@@ -69,25 +69,27 @@ public class HelpMethods {
     }
 
     public static boolean isEntityOnFloor(Rectangle hitbox, int[][] lvlData) {
-        if (!isSolid((float) hitbox.getX(), (float) hitbox.getY() + (float) hitbox.getHeight() + 1, lvlData)) {
-            if (!isSolid((float) hitbox.getX() + (float) hitbox.getWidth(),
-                    (float) hitbox.getY() + (float) hitbox.getHeight() + 1, lvlData)) {
+        if (!isSolid((float) hitbox.getX(), (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData))
+            if (!isSolid((float) (hitbox.getX() + hitbox.getWidth()), (float) (hitbox.getY() + hitbox.getHeight() + 1),
+                    lvlData))
                 return false;
-            }
-        }
         return true;
     }
 
-    public static Point getPlayerSpawn(Image img) {
-        PixelReader pixelReader = img.getPixelReader();
-        for (int j = 0; j < img.getHeight(); j++)
-            for (int i = 0; i < img.getWidth(); i++) {
-                Color color = pixelReader.getColor(i, j);
-                int value = (int) (color.getGreen() * 255);
-                if (value == 100)
-                    return new Point(i * Game.getTilesSize(), j * Game.getTilesSize());
-            }
-        return new Point(1 * Game.getTilesSize(), 1 * Game.getTilesSize());
+    public static boolean isFloor(Rectangle hitbox, float xSpeed, int[][] lvlData) {
+        if (xSpeed > 0)
+            return isSolid((float) (hitbox.getX() + hitbox.getWidth() + xSpeed),
+                    (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData);
+        else
+            return isSolid((float) (hitbox.getX() + xSpeed), (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData);
+    }
+
+    public static boolean isFloor(Rectangle hitbox, int[][] lvlData) {
+        if (!isSolid((float) (hitbox.getX() + hitbox.getWidth()), (float) (hitbox.getY() + hitbox.getHeight() + 1),
+                lvlData))
+            if (!isSolid((float) hitbox.getX(), (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData))
+                return false;
+        return true;
     }
 
     public static boolean hasPlayerFinishedLevel(Level level, Player player) {
@@ -99,21 +101,5 @@ public class HelpMethods {
         } else {
             return player.getHitbox().getX() >= endOfLevel - 100;
         }
-    }
-
-    public static int[][] getLevelData(Image image) {
-        int[][] lvlData = new int[(int) image.getHeight()][(int) image.getWidth()];
-        PixelReader pixelReader = image.getPixelReader();
-        for (int j = 0; j < image.getHeight(); j++) {
-            for (int i = 0; i < image.getWidth(); i++) {
-                Color color = pixelReader.getColor(i, j);
-                int value = (int) (color.getRed() * 255);
-                if (value >= 48) {
-                    value = 0;
-                }
-                lvlData[j][i] = value;
-            }
-        }
-        return lvlData;
     }
 }

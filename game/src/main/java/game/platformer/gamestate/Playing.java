@@ -4,15 +4,16 @@ import game.platformer.Game;
 import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
+import game.platformer.objects.ObjectManager;
 import game.platformer.ui.Background;
 import game.platformer.ui.LevelCompletedOverlay;
 import game.platformer.ui.PauseOverlay;
-import game.platformer.utils.HelpMethods;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 public class Playing extends State implements StateMethods {
 
@@ -22,6 +23,7 @@ public class Playing extends State implements StateMethods {
     private PauseOverlay pauseOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
     private Background backgroundManager;
+    private ObjectManager objectManager;
 
     private boolean paused;
     private boolean gameOver = false;
@@ -41,6 +43,7 @@ public class Playing extends State implements StateMethods {
     private void initClasses() {
         this.backgroundManager = new Background(this);
         this.levelManager = new LevelManager(this, LoadSave.LEVEL_ATLAS, 48, 12, 4);
+        this.objectManager = new ObjectManager(this);
 
         this.player = new Player(this, 100 * Game.getScale(), 200 * Game.getScale(), (int) (64 * Game.getScale()),
                 (int) (40 * Game.getScale()));
@@ -51,23 +54,22 @@ public class Playing extends State implements StateMethods {
         this.pauseOverlay = new PauseOverlay(this);
         this.levelCompletedOverlay = new LevelCompletedOverlay(this);
         this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay);
+        this.hud.getTimer().start();
     }
 
     @Override
     public void update() {
-        if (HelpMethods.hasPlayerFinishedLevel(this.levelManager.getCurrentLevel(), this.player)) {
-            this.setLevelCompleted(true);
-        }
-        if (paused) {
-            pauseOverlay.update();
-        } else if (lvlCompleted) {
-            levelCompletedOverlay.update();
-        } else if (!gameOver) {
-            if (!this.hud.getTimer().isRunning()) {
-                this.hud.getTimer().start();
-            }
-            this.hud.update();
+        if (this.paused) {
+            this.pauseOverlay.update();
+        } else if (this.gameOver) {
+            System.out.println("Game Over!");
+        } else if (this.lvlCompleted) {
+            this.levelCompletedOverlay.update();
+        } else {
+            this.objectManager.update();
+            this.levelManager.update();
             this.player.update();
+            this.hud.update();
             checkCloseToBorder();
         }
     }
@@ -77,14 +79,20 @@ public class Playing extends State implements StateMethods {
         gc.clearRect(0, 0, this.game.getGamePane().getCanvas().getWidth(),
                 this.game.getGamePane().getCanvas().getHeight());
         this.backgroundManager.render(gc, xLvlOffset);
-        if (paused) {
-            pauseOverlay.render();
-        }
+
+        this.levelManager.render(gc, xLvlOffset);
+        this.objectManager.render(gc, xLvlOffset);
         this.hud.render();
-        this.levelManager.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
         this.player.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
 
-        if (lvlCompleted) {
+        if (paused) {
+            gc.setFill(Color.rgb(0, 0, 0, 0.5));
+            this.hud.darken();
+            gc.fillRect(0, 0, Game.getScreenWidth(), Game.getScreenHeight());
+            pauseOverlay.render();
+        } else if (gameOver) {
+            System.out.println("Rendering Game Over");
+        } else if (lvlCompleted) {
             levelCompletedOverlay.render(gc);
         }
     }
@@ -217,7 +225,7 @@ public class Playing extends State implements StateMethods {
 
     public void setLevelCompleted(boolean levelCompleted) {
         this.lvlCompleted = levelCompleted;
-        if (lvlCompleted) {
+        if (this.lvlCompleted) {
             game.getAudioPlayer().lvlCompleted();
         }
     }
@@ -236,6 +244,10 @@ public class Playing extends State implements StateMethods {
 
     public LevelManager getLevelManager() {
         return this.levelManager;
+    }
+
+    public ObjectManager getObjectManager() {
+        return this.objectManager;
     }
 
     public HudPane getHudPane() {

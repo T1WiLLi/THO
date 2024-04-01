@@ -96,7 +96,8 @@ public class PauseOverlay extends Canvas {
             }
         } else if (isIn(e, saveB)) {
             if (saveB.isMousePressed()) {
-                System.out.println("Save!");
+                playing.resetAll();
+                playing.unpauseGame();
             }
         } else {
             audioOptions.mouseReleased(e);

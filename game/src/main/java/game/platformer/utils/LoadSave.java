@@ -19,6 +19,10 @@ public class LoadSave {
     public static final String BACKGROUND_LAYER_2 = "background/background_layer_2.png";
     public static final String BACKGROUND_LAYER_3 = "background/background_layer_3.png";
 
+    // Objects
+    public static final String GRASS_OBJ = "sprite/grass_atlas.png";
+    public static final String SPIKE_OBJ = "sprite/trap_atlas.png";
+
     // Props
     public static final String PROPS = "props/tree.png";
 
