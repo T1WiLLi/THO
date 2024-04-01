@@ -1,12 +1,15 @@
 package game.platformer.ui;
 
 import game.platformer.Game;
+import game.platformer.gamestate.Playing;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Background {
+
+    private Playing playing;
 
     private Image backgroundLayerOne;
     private Image backgroundLayerTwo;
@@ -15,7 +18,8 @@ public class Background {
     private final int LAYER_WIDTH_DEFAULT = 320;
     private final int LAYER_WIDTH = (int) (this.LAYER_WIDTH_DEFAULT * Game.getScale());
 
-    public Background() {
+    public Background(Playing playing) {
+        this.playing = playing;
         this.backgroundLayerOne = LoadSave.getSprite(LoadSave.BACKGROUND_LAYER_1);
         this.backgroundLayerTwo = LoadSave.getSprite(LoadSave.BACKGROUND_LAYER_2);
         this.backgroundLayerThree = LoadSave.getSprite(LoadSave.BACKGROUND_LAYER_3);
@@ -25,7 +29,8 @@ public class Background {
         gc.setFill(Color.rgb(25, 25, 25));
         gc.fillRect(0, 0, Game.getScreenWidth(), Game.getScreenHeight());
 
-        int widthOfLevel = (int) (LoadSave.getSprite(LoadSave.LEVEL_ONE_DATA).getWidth() * Game.getTilesSize());
+        int widthOfLevel = (int) (playing.getLevelManager().getCurrentLevel().getLevelImage().getWidth()
+                * Game.getTilesSize());
         int amountOfLayerToBeDrawn = (int) (widthOfLevel / this.LAYER_WIDTH);
 
         for (int i = 0; i < amountOfLayerToBeDrawn; i++) {

@@ -7,6 +7,7 @@ import game.platformer.levels.LevelManager;
 import game.platformer.ui.Background;
 import game.platformer.ui.LevelCompletedOverlay;
 import game.platformer.ui.PauseOverlay;
+import game.platformer.utils.HelpMethods;
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -24,38 +25,37 @@ public class Playing extends State implements StateMethods {
 
     private boolean paused;
     private boolean gameOver = false;
-    private boolean lvlCompleted = true;
+    private boolean lvlCompleted = false;
 
     private int xLvlOffset;
     private int leftBorder = (int) (0.5 * Game.getScreenWidth());
     private int rightBorder = (int) (0.5 * Game.getScreenWidth());
-    private int lvlTilesWide = LoadSave.getLevelData(LoadSave.LEVEL_ONE_DATA)[0].length;
-    private int maxTilesOffset = lvlTilesWide - Game.getTilesInWidth();
-    private int maxLvlOffsetX = maxTilesOffset * Game.getTilesSize();
+    private int maxLvlOffsetX;
 
     public Playing(Game game) {
         super(game);
         initClasses();
+        calcLvlOffset();
     }
 
     private void initClasses() {
         this.pauseOverlay = new PauseOverlay(this);
         this.levelCompletedOverlay = new LevelCompletedOverlay(this);
-        this.levelManager = new LevelManager(LoadSave.LEVEL_ATLAS, LoadSave.LEVEL_ONE_DATA, 48, 12, 4);
+        this.levelManager = new LevelManager(this, LoadSave.LEVEL_ATLAS, 48, 12, 4);
         this.player = new Player(100 * Game.getScale(), 200 * Game.getScale(), (int) (64 * Game.getScale()),
                 (int) (40 * Game.getScale()));
+        this.player.setSpawn(this.levelManager.getCurrentLevel().getPlayerSpawn());
         this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
         this.hud = new HudPane(this.player);
-        this.backgroundManager = new Background();
+        this.backgroundManager = new Background(this);
         this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay);
-    }
-
-    public void windowsFocusLost() {
-        this.player.resetDirBooleans();
     }
 
     @Override
     public void update() {
+        if (HelpMethods.hasPlayerFinishedLevel(this.levelManager.getCurrentLevel(), this.player)) {
+            this.setLevelCompleted(true);
+        }
         if (paused) {
             pauseOverlay.update();
         } else if (lvlCompleted) {
@@ -85,6 +85,20 @@ public class Playing extends State implements StateMethods {
         if (lvlCompleted) {
             levelCompletedOverlay.render(gc);
         }
+    }
+
+    public void windowsFocusLost() {
+        this.player.resetDirBooleans();
+    }
+
+    public void loadNextLevel() {
+        resetAll();
+        levelManager.loadNextLevel();
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+    }
+
+    private void calcLvlOffset() {
+        this.maxLvlOffsetX = this.levelManager.getCurrentLevel().getLvlOffset();
     }
 
     private void checkCloseToBorder() {
@@ -203,12 +217,20 @@ public class Playing extends State implements StateMethods {
         this.lvlCompleted = levelCompleted;
     }
 
+    public void setMaxLvlOffset(int lvlOffset) {
+        this.maxLvlOffsetX = lvlOffset;
+    }
+
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
 
     public void unpauseGame() {
         this.paused = false;
+    }
+
+    public LevelManager getLevelManager() {
+        return this.levelManager;
     }
 
     public HudPane getHudPane() {

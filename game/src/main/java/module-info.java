@@ -1,5 +1,5 @@
 module game.platformer {
-    requires java.desktop;
+    requires transitive java.desktop;
     requires javafx.controls;
     requires javafx.fxml;
     requires transitive javafx.graphics;

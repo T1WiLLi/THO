@@ -65,11 +65,10 @@ public class LevelCompletedOverlay {
     public void mouseReleased(MouseEvent e) {
         if (isIn(e, this.next)) {
             if (this.next.isMousePressed()) {
-                this.next.setMousePressed(false);
+                this.playing.loadNextLevel();
             }
         } else if (isIn(e, this.menu)) {
             if (this.menu.isMousePressed()) {
-                this.menu.setMousePressed(false);
                 this.playing.setPause(false);
                 this.playing.getHudPane().clearCanvas();
                 this.playing.getHudPane().getTimer().stop();

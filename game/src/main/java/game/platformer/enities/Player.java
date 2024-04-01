@@ -11,9 +11,10 @@ import game.platformer.utils.LoadSave;
 import game.platformer.Game;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.Light.Point;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+
+import java.awt.Point;
 
 public class Player extends Entity {
 

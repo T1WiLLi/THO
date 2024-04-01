@@ -1,10 +1,39 @@
 package game.platformer.levels;
 
-public class Level {
-    private int[][] lvlData;
+import java.awt.Point;
 
-    public Level(int[][] lvlData) {
-        this.lvlData = lvlData;
+import game.platformer.Game;
+import game.platformer.utils.HelpMethods;
+import javafx.scene.image.Image;
+
+public class Level {
+
+    private Image image;
+    private int[][] lvlData;
+    private int lvlTilesWide;
+    private int maxTilesOffset;
+    private int maxLvlOffsetX;
+    private Point playerSpawn;
+
+    public Level(Image image) {
+        this.image = image;
+        createLevelData();
+        calcLvlOffsets();
+        calcPlayerSpawn();
+    }
+
+    private void createLevelData() {
+        lvlData = HelpMethods.getLevelData(this.image);
+    }
+
+    private void calcLvlOffsets() {
+        this.lvlTilesWide = (int) image.getWidth();
+        this.maxTilesOffset = lvlTilesWide - Game.getTilesInWidth();
+        this.maxLvlOffsetX = Game.getTilesSize() * maxTilesOffset;
+    }
+
+    private void calcPlayerSpawn() {
+        playerSpawn = HelpMethods.getPlayerSpawn(this.image);
     }
 
     public int getSpriteIndex(int x, int y) {
@@ -13,5 +42,17 @@ public class Level {
 
     public int[][] getLevelData() {
         return lvlData;
+    }
+
+    public int getLvlOffset() {
+        return maxLvlOffsetX;
+    }
+
+    public Point getPlayerSpawn() {
+        return playerSpawn;
+    }
+
+    public Image getLevelImage() {
+        return this.image;
     }
 }

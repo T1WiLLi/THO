@@ -1,7 +1,14 @@
 package game.platformer.utils;
 
 import game.platformer.Game;
+import game.platformer.enities.Player;
+import game.platformer.levels.Level;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import java.awt.Point;
 
 public class HelpMethods {
 
@@ -69,5 +76,39 @@ public class HelpMethods {
             }
         }
         return true;
+    }
+
+    public static Point getPlayerSpawn(Image img) {
+        PixelReader pixelReader = img.getPixelReader();
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = pixelReader.getColor(i, j);
+                int value = (int) (color.getGreen() * 255);
+                if (value == 100)
+                    return new Point(i * Game.getTilesSize(), j * Game.getTilesSize());
+            }
+        return new Point(1 * Game.getTilesSize(), 1 * Game.getTilesSize());
+    }
+
+    public static boolean hasPlayerFinishedLevel(Level level, Player player) {
+        int endOfLevel = level.getLevelData()[0].length * Game.getTilesSize(); // Get Width IN PX
+        int threshold = endOfLevel - 100; // 100 pixels before the end
+        return player.getHitbox().getX() >= threshold;
+    }
+
+    public static int[][] getLevelData(Image image) {
+        int[][] lvlData = new int[(int) image.getHeight()][(int) image.getWidth()];
+        PixelReader pixelReader = image.getPixelReader();
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = pixelReader.getColor(i, j);
+                int value = (int) (color.getRed() * 255);
+                if (value >= 48) {
+                    value = 0;
+                }
+                lvlData[j][i] = value;
+            }
+        }
+        return lvlData;
     }
 }

@@ -1,10 +1,11 @@
 package game.platformer.utils;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.paint.Color;
 
 public class LoadSave {
 
@@ -13,7 +14,6 @@ public class LoadSave {
     public static final String LEVEL_ATLAS = "sprite/outside_sprite.png";
 
     // Levels
-    public static final String LEVEL_ONE_DATA = "leveldata/level_one_data_long.png";
     public static final String PROPS_DATA = "leveldata/level_one_props_data.png";
     public static final String BACKGROUND_LAYER_1 = "background/background_layer_1.png";
     public static final String BACKGROUND_LAYER_2 = "background/background_layer_2.png";
@@ -58,21 +58,35 @@ public class LoadSave {
         return img;
     }
 
-    public static int[][] getLevelData(String filename) {
-        Image img = LoadSave.getSprite(filename);
-        int[][] lvlData = new int[(int) img.getHeight()][(int) img.getWidth()];
+    public static Image[] getAllLevels() {
+        URL url = LoadSave.class.getResource("/game/platformer/assets/leveldata");
+        File file = null;
 
-        PixelReader pixelReader = img.getPixelReader();
-        for (int j = 0; j < img.getHeight(); j++) {
-            for (int i = 0; i < img.getWidth(); i++) {
-                Color color = pixelReader.getColor(i, j);
-                int value = (int) (color.getRed() * 255);
-                if (value >= 48) {
-                    value = 0;
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        File[] files = file.listFiles();
+        File[] filesSorted = new File[files.length];
+
+        for (int i = 0; i < filesSorted.length; i++) {
+            for (int j = 0; j < files.length; j++) {
+                if (files[j].getName().equals((i + 1) + ".png")) {
+                    filesSorted[i] = files[j];
                 }
-                lvlData[j][i] = value;
             }
         }
-        return lvlData;
+
+        Image[] imgs = new Image[filesSorted.length];
+        for (int i = 0; i < imgs.length; i++) {
+            try {
+                imgs[i] = new Image(filesSorted[i].toURI().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return imgs;
     }
 }
