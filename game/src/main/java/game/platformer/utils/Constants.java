@@ -4,6 +4,9 @@ import game.platformer.Game;
 
 public class Constants {
 
+    public static final float GRAVITY = 0.04f * Game.getScale();
+    public static final float ANIMATION_SPEED = 20;
+
     public static class UI {
         public static class Buttons {
             public static final int B_WIDTH_DEFAULT = 140;

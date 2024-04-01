@@ -1,6 +1,7 @@
 package game.platformer.ui;
 
 import game.platformer.Game;
+import game.platformer.audio.AudioPlayer;
 import game.platformer.gamestate.GameState;
 import game.platformer.gamestate.Playing;
 import game.platformer.utils.LoadSave;
@@ -15,7 +16,6 @@ public class LevelCompletedOverlay {
     private Playing playing;
     private UrmButton menu, next;
     private Image background;
-
     private int bgX, bgY, bgWidth, bgHeight;
 
     public LevelCompletedOverlay(Playing playing) {
@@ -29,13 +29,13 @@ public class LevelCompletedOverlay {
         this.bgWidth = (int) (background.getWidth() * Game.getScale());
         this.bgHeight = (int) (background.getHeight() * Game.getScale());
         this.bgX = Game.getScreenWidth() / 2 - bgWidth / 2;
-        this.bgY = (int) (75 * Game.getScale());
+        this.bgY = (int) (30 * Game.getScale());
     }
 
     private void initButtons() {
         int menuX = (int) (330 * Game.getScale());
         int nextX = (int) (445 * Game.getScale());
-        int y = (int) (195 * Game.getScale());
+        int y = (int) (150 * Game.getScale());
         this.next = new UrmButton(nextX, y, URM_SIZE, URM_SIZE, 0);
         this.menu = new UrmButton(menuX, y, URM_SIZE, URM_SIZE, 2);
     }
@@ -66,13 +66,15 @@ public class LevelCompletedOverlay {
         if (isIn(e, this.next)) {
             if (this.next.isMousePressed()) {
                 this.playing.loadNextLevel();
+                this.playing.getGame().getAudioPlayer().setLevelSong(AudioPlayer.LEVEL_1);
             }
         } else if (isIn(e, this.menu)) {
             if (this.menu.isMousePressed()) {
                 this.playing.setPause(false);
                 this.playing.getHudPane().clearCanvas();
                 this.playing.getHudPane().getTimer().stop();
-                GameState.state = GameState.MENU;
+                this.playing.resetAll();
+                playing.setGameState(GameState.MENU);
             }
         }
 

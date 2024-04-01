@@ -1,10 +1,14 @@
 package game.platformer;
 
+import game.platformer.audio.AudioPlayer;
+import game.platformer.database.User;
+import game.platformer.gamestate.GameOptions;
 import game.platformer.gamestate.GameState;
 import game.platformer.gamestate.Menu;
 import game.platformer.gamestate.Playing;
 import game.platformer.input.InputHandler;
 import game.platformer.input.MouseHandler;
+import game.platformer.ui.AudioOptions;
 import game.platformer.utils.LoadSave;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.awt.GraphicsEnvironment;
@@ -32,9 +37,18 @@ public class Game extends Application implements Runnable {
     private InputHandler inputHandler;
     private MouseHandler mouseHandler;
 
+    // Audio
+    private AudioPlayer audioPlayer;
+    private AudioOptions audioOptions;
+
+    // User
+    private User user;
+    private Label username;
+
     // States
     private Playing playing;
     private Menu menu;
+    private GameOptions gameOptions;
 
     // FPS
     private Label fps;
@@ -62,6 +76,7 @@ public class Game extends Application implements Runnable {
         // Init enemies and player
         initClasses();
         initFPS();
+        initUser();
 
         gamePanel.setOnKeyPressed(inputHandler::handle);
         gamePanel.setOnKeyReleased(inputHandler::handleKeyReleased);
@@ -104,11 +119,24 @@ public class Game extends Application implements Runnable {
     private void initFPS() {
         this.fps = new Label();
         this.fps.setTextFill(Color.WHITESMOKE);
-        StackPane.setAlignment(fps, Pos.TOP_LEFT);
-        this.gamePanel.getChildren().add(fps);
+        StackPane.setAlignment(this.fps, Pos.TOP_LEFT);
+        this.gamePanel.getChildren().add(this.fps);
+    }
+
+    private void initUser() {
+        this.username = new Label();
+        this.username.setTextFill(Color.WHITESMOKE);
+        this.username.setFont(Font.font(20));
+        this.username.setText("Connected as: " + this.user.getUsername());
+        StackPane.setAlignment(this.username, Pos.TOP_RIGHT);
+        this.gamePanel.getChildren().addAll(this.username);
     }
 
     private void initClasses() {
+        this.user = new User(null);
+        this.audioOptions = new AudioOptions(this);
+        this.audioPlayer = new AudioPlayer();
+        this.gameOptions = new GameOptions(this);
         this.gamePanel = new GamePane(this, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.inputHandler = new InputHandler(this);
         this.mouseHandler = new MouseHandler(this);
@@ -118,32 +146,33 @@ public class Game extends Application implements Runnable {
 
     private void startGameLoop() {
         gameThread = new Thread(this);
+        gameThread.setName("Game Thread");
         gameThread.start();
     }
 
     private void update() {
         Platform.runLater(() -> {
             switch (GameState.state) {
-                case MENU -> menu.update();
-                case PLAYING -> playing.update();
-                // case OPTIONS -> gameOptions.update();
+                case MENU -> this.menu.update();
+                case PLAYING -> this.playing.update();
+                case OPTIONS -> gameOptions.update();
                 case QUIT -> {
-                    // Make saves here
                     Platform.exit();
                     System.exit(0);
                 }
                 default -> System.out.println("Error");
             }
             ;
+            this.username.setText("Connected as: " + this.user.getUsername());
         });
     }
 
     public void render() {
         Platform.runLater(() -> {
             switch (GameState.state) {
-                case MENU -> menu.render(this.gamePanel.getGraphicsContext());
-                case PLAYING -> playing.render(this.gamePanel.getGraphicsContext());
-                // case OPTIONS -> gameOptions.render(this.gamePanel.getGraphicsContext());
+                case MENU -> this.menu.render(this.gamePanel.getGraphicsContext());
+                case PLAYING -> this.playing.render(this.gamePanel.getGraphicsContext());
+                case OPTIONS -> gameOptions.render(this.gamePanel.getGraphicsContext());
                 default -> System.out.println("Error");
             }
             ;
@@ -226,10 +255,26 @@ public class Game extends Application implements Runnable {
     }
 
     public Menu getMenu() {
-        return menu;
+        return this.menu;
     }
 
     public Playing getPlaying() {
-        return playing;
+        return this.playing;
+    }
+
+    public GameOptions getGameOptions() {
+        return this.gameOptions;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return this.audioOptions;
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return this.audioPlayer;
+    }
+
+    public User getUser() {
+        return this.user;
     }
 }

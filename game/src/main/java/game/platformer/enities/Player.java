@@ -1,6 +1,8 @@
 package game.platformer.enities;
 
 import static game.platformer.utils.Constants.PlayerConstants.*;
+import static game.platformer.utils.Constants.GRAVITY;
+import static game.platformer.utils.Constants.ANIMATION_SPEED;
 import static game.platformer.utils.HelpMethods.*;
 
 import java.util.Timer;
@@ -9,7 +11,8 @@ import java.util.TimerTask;
 import game.platformer.utils.HelpMethods;
 import game.platformer.utils.LoadSave;
 import game.platformer.Game;
-
+import game.platformer.audio.AudioPlayer;
+import game.platformer.gamestate.Playing;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -18,10 +21,12 @@ import java.awt.Point;
 
 public class Player extends Entity {
 
-    private int playerAction = IDLE;
+    private Playing playing;
+
     private boolean moving = false;
-    private boolean left, up, down, right, jump, facingRight = true;
+    private boolean left, right, jump, facingRight = true;
     private float playerSpeed = 0.75f * Game.getScale();
+    private Point spawPoint;
 
     private int[][] lvlData;
     private float xDrawOffset = 21 * Game.getScale();
@@ -29,28 +34,29 @@ public class Player extends Entity {
 
     // JUMP & GRAVITY
     private float airSpeed = 0f;
-    private final float GRAVITY = 0.04f * Game.getScale();
     private float jumpSpeed = -2.25f * Game.getScale();
     private float fallSpeedAfterCollision = 0.8f * Game.getScale();
     private boolean inAir = false;
 
     // Animations logic
     private WritableImage[][] animations;
-    private int tickAnimation = 0, animationIndex = 0, aniSpeed = 20;
 
     // Dash
-    private float dash; // max 100 means we can dash, otherwise, it take 5s to recharge.
+    private float dash; // max 100 means we can dash, otherwise, it take 500ms to recharge.
     private long lastDashTime = 0;
     private final long RECHARGE_DURATION_MS = 500;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(Playing playing, float x, float y, int width, int height) {
         super(x, y, width, height);
+        this.playing = playing;
         this.dash = 100;
+        this.state = IDLE;
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.getScale()), (int) (27 * Game.getScale()));
     }
 
     public void setSpawn(Point spawn) {
+        this.spawPoint = spawn;
         this.x = (float) spawn.getX();
         this.y = (float) spawn.getY();
         hitbox.setX(this.x);
@@ -69,7 +75,7 @@ public class Player extends Entity {
             gc.save();
             gc.scale(-1, 1);
         }
-        gc.drawImage(animations[playerAction][animationIndex],
+        gc.drawImage(animations[state][animationIndex],
                 ((facingRight) ? (int) (hitbox.getX() - xDrawOffset) - xLvlOffset
                         : -(hitbox.getX() - xDrawOffset - xLvlOffset) - width),
                 (int) (hitbox.getY() - yDrawOffset), width, height);
@@ -188,6 +194,7 @@ public class Player extends Entity {
         if (!inAir) {
             inAir = true;
             airSpeed = jumpSpeed;
+            this.playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
         }
     }
 
@@ -206,23 +213,23 @@ public class Player extends Entity {
     }
 
     private void setAnimation() {
-        int startAni = playerAction;
+        int startAni = state;
 
         if (moving) {
-            playerAction = RUNNING;
+            state = RUNNING;
         } else {
-            playerAction = IDLE;
+            state = IDLE;
         }
 
         if (inAir) {
             if (airSpeed < 0) {
-                playerAction = JUMP;
+                state = JUMP;
             } else {
-                playerAction = FALLING;
+                state = FALLING;
             }
         }
 
-        if (startAni != playerAction) {
+        if (startAni != state) {
             tickAnimation = 0;
             animationIndex = 0;
         }
@@ -230,10 +237,10 @@ public class Player extends Entity {
 
     private void updateAnimationTicks() {
         tickAnimation++;
-        if (tickAnimation >= aniSpeed) {
+        if (tickAnimation >= ANIMATION_SPEED) {
             tickAnimation = 0;
             animationIndex++;
-            if (animationIndex >= getSpriteAmount(playerAction)) {
+            if (animationIndex >= getSpriteAmount(state)) {
                 animationIndex = 0;
             }
         }
@@ -258,9 +265,8 @@ public class Player extends Entity {
 
     public void resetDirBooleans() {
         left = false;
-        up = false;
-        down = false;
         right = false;
+        jump = false;
     }
 
     public void setRunning(boolean value) {
@@ -275,28 +281,12 @@ public class Player extends Entity {
         return left;
     }
 
-    public boolean isUp() {
-        return up;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
     public boolean isRight() {
         return right;
     }
 
     public void setLeft(boolean left) {
         this.left = left;
-    }
-
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
     }
 
     public void setRight(boolean right) {
@@ -321,12 +311,16 @@ public class Player extends Entity {
         return this.dash;
     }
 
+    public Point getSpawnPoint() {
+        return this.spawPoint;
+    }
+
     public void resetAll() {
         resetDirBooleans();
         inAir = false;
         this.facingRight = true;
         moving = false;
-        playerAction = IDLE;
+        state = IDLE;
 
         hitbox.setX(x);
         hitbox.setY(y);

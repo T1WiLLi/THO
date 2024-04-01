@@ -29,7 +29,7 @@ public class MouseHandler implements EventHandler<MouseEvent> {
         switch (GameState.state) {
             case MENU -> game.getMenu().mousePressed(event);
             case PLAYING -> game.getPlaying().mousePressed(event);
-            // case OPTIONS -> game.getGameOptions().mousePressed(event);
+            case OPTIONS -> game.getGameOptions().mousePressed(event);
             case QUIT -> game.getMenu().mousePressed(event);
             default -> throw new IllegalArgumentException("Unexpected value: " + GameState.state);
         }
@@ -39,7 +39,7 @@ public class MouseHandler implements EventHandler<MouseEvent> {
         switch (GameState.state) {
             case MENU -> game.getMenu().mouseReleased(event);
             case PLAYING -> game.getPlaying().mouseReleased(event);
-            // case OPTIONS -> game.getGameOptions().mouseReleased(event);
+            case OPTIONS -> game.getGameOptions().mouseReleased(event);
             case QUIT -> game.getMenu().mouseReleased(event);
             default -> throw new IllegalArgumentException("Unexpected value: " + GameState.state);
         }
@@ -49,7 +49,7 @@ public class MouseHandler implements EventHandler<MouseEvent> {
         switch (GameState.state) {
             case MENU -> game.getMenu().mouseMoved(event);
             case PLAYING -> game.getPlaying().mouseMoved(event);
-            // case OPTIONS -> game.getGameOptions().mouseMoved(event);
+            case OPTIONS -> game.getGameOptions().mouseMoved(event);
             case QUIT -> game.getMenu().mouseMoved(event);
             default -> throw new IllegalArgumentException("Unexpected value: " + GameState.state);
         }
@@ -59,7 +59,7 @@ public class MouseHandler implements EventHandler<MouseEvent> {
         switch (GameState.state) {
             case PLAYING -> game.getPlaying().mouseDragged(event);
             case MENU -> game.getMenu().mouseDragged(event);
-            // case OPTIONS -> game.getGameOptions().mouseDragged(event);
+            case OPTIONS -> game.getGameOptions().mouseDragged(event);
             default -> throw new IllegalArgumentException("Unexpected value: " + GameState.state);
         }
     }

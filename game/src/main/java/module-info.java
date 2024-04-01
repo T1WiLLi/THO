@@ -2,6 +2,7 @@ module game.platformer {
     requires transitive java.desktop;
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
     requires transitive javafx.graphics;
 
     opens game.platformer to javafx.fxml;
@@ -12,4 +13,6 @@ module game.platformer {
     exports game.platformer.gamestate;
     exports game.platformer.ui;
     exports game.platformer.hud;
+    exports game.platformer.database;
+    exports game.platformer.audio;
 }

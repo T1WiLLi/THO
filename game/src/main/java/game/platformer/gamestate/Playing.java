@@ -39,15 +39,17 @@ public class Playing extends State implements StateMethods {
     }
 
     private void initClasses() {
-        this.pauseOverlay = new PauseOverlay(this);
-        this.levelCompletedOverlay = new LevelCompletedOverlay(this);
+        this.backgroundManager = new Background(this);
         this.levelManager = new LevelManager(this, LoadSave.LEVEL_ATLAS, 48, 12, 4);
-        this.player = new Player(100 * Game.getScale(), 200 * Game.getScale(), (int) (64 * Game.getScale()),
+
+        this.player = new Player(this, 100 * Game.getScale(), 200 * Game.getScale(), (int) (64 * Game.getScale()),
                 (int) (40 * Game.getScale()));
         this.player.setSpawn(this.levelManager.getCurrentLevel().getPlayerSpawn());
         this.player.loadLvlData(this.levelManager.getCurrentLevel().getLevelData());
+
         this.hud = new HudPane(this.player);
-        this.backgroundManager = new Background(this);
+        this.pauseOverlay = new PauseOverlay(this);
+        this.levelCompletedOverlay = new LevelCompletedOverlay(this);
         this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay);
     }
 
@@ -215,6 +217,9 @@ public class Playing extends State implements StateMethods {
 
     public void setLevelCompleted(boolean levelCompleted) {
         this.lvlCompleted = levelCompleted;
+        if (lvlCompleted) {
+            game.getAudioPlayer().lvlCompleted();
+        }
     }
 
     public void setMaxLvlOffset(int lvlOffset) {

@@ -52,8 +52,10 @@ public class LevelManager {
         lvlIndex++;
         if (lvlIndex >= levels.size()) {
             lvlIndex = 0;
-            System.out.println("No more levels! Game Completed!");
-            GameState.state = GameState.MENU;
+            this.playing.setPause(false);
+            this.playing.getHudPane().clearCanvas();
+            this.playing.getHudPane().getTimer().stop();
+            this.playing.setGameState(GameState.MENU);
         }
 
         Level newLevel = levels.get(lvlIndex);
@@ -84,5 +86,9 @@ public class LevelManager {
 
     public int getAmountOfLevels() {
         return levels.size();
+    }
+
+    public int getLevelIndex() {
+        return lvlIndex;
     }
 }

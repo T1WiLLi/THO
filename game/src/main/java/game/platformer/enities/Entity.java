@@ -10,6 +10,10 @@ public abstract class Entity {
     protected int width, height;
     protected Rectangle hitbox;
 
+    protected int tickAnimation = 0, animationIndex = 0;
+
+    protected int state;
+
     public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
@@ -23,10 +27,14 @@ public abstract class Entity {
     }
 
     protected void initHitbox(float x, float y, int width, int height) {
-        hitbox = new Rectangle(x, y, width, height);
+        this.hitbox = new Rectangle(x, y, width, height);
     }
 
     public Rectangle getHitbox() {
         return this.hitbox;
+    }
+
+    public int getState() {
+        return this.state;
     }
 }

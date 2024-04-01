@@ -27,6 +27,7 @@ public class LoadSave {
     public static final String MENU_BACKGROUND = "ui/menu_background.png";
     public static final String LEVEL_COMPLETE = "ui/completed_sprite.png";
     public static final String MENU_BACKGROUND_IMAGE = "ui/menuBg.png";
+    public static final String CONNEXION_BACKGROUND = "ui/connexion.png";
     public static final String OPTIONS_BACKGROUND = "ui/options_background.png";
     public static final String PAUSE_BACKGROUND = "ui/pause_menu.png";
     public static final String SOUND_BUTTON = "ui/sound_button.png";

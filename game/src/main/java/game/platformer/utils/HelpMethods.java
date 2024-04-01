@@ -92,8 +92,13 @@ public class HelpMethods {
 
     public static boolean hasPlayerFinishedLevel(Level level, Player player) {
         int endOfLevel = level.getLevelData()[0].length * Game.getTilesSize(); // Get Width IN PX
-        int threshold = endOfLevel - 100; // 100 pixels before the end
-        return player.getHitbox().getX() >= threshold;
+        Point spawnPoint = player.getSpawnPoint();
+
+        if (spawnPoint.getX() >= endOfLevel / 2) {
+            return player.getHitbox().getX() <= 100;
+        } else {
+            return player.getHitbox().getX() >= endOfLevel - 100;
+        }
     }
 
     public static int[][] getLevelData(Image image) {
