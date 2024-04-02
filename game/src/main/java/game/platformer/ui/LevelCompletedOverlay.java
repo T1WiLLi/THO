@@ -1,7 +1,6 @@
 package game.platformer.ui;
 
 import game.platformer.Game;
-import game.platformer.audio.AudioPlayer;
 import game.platformer.gamestate.GameState;
 import game.platformer.gamestate.Playing;
 import game.platformer.utils.LoadSave;

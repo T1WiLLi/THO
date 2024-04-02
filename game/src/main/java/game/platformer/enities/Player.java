@@ -23,7 +23,7 @@ public class Player extends Entity {
     private Playing playing;
 
     private boolean moving = false;
-    private boolean left, right, jump, facingRight = true;
+    private boolean left, right, jump, facingRight = true, isAlive = false;
     private float playerSpeed = 0.75f * Game.getScale();
     private Point spawPoint;
 
@@ -63,10 +63,18 @@ public class Player extends Entity {
     }
 
     public void update() {
-        updatePos();
-        updateDash(System.currentTimeMillis());
-        updateAnimationTicks();
-        setAnimation();
+        if (isAlive) {
+            updatePos();
+            updateDash(System.currentTimeMillis());
+            updateAnimationTicks();
+            setAnimation();
+        } else {
+            state = DEAD;
+            this.setAnimation();
+            this.animationIndex = 0;
+            this.tickAnimation = 0;
+            playing.setPlayerDying(true);
+        }
     }
 
     public void render(GraphicsContext gc, int xLvlOffset) {
@@ -198,7 +206,7 @@ public class Player extends Entity {
     }
 
     public void kill() {
-        this.playing.setGameOver(true);
+        this.isAlive = false;
     }
 
     private void resetInAir() {
@@ -304,6 +312,14 @@ public class Player extends Entity {
         return this.jump;
     }
 
+    public boolean isAlive() {
+        return this.isAlive;
+    }
+
+    public void setAlive(boolean value) {
+        this.isAlive = value;
+    }
+
     public void dash(float value, double mouseX, double mouseY, int xLvlOffset) {
         this.dash = value;
         this.lastDashTime = System.currentTimeMillis();
@@ -324,6 +340,7 @@ public class Player extends Entity {
         this.facingRight = true;
         moving = false;
         state = IDLE;
+        // isAlive = true;
 
         hitbox.setX(x);
         hitbox.setY(y);

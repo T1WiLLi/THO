@@ -6,6 +6,7 @@ import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
 import game.platformer.objects.ObjectManager;
 import game.platformer.ui.Background;
+import game.platformer.ui.GameOverOverlay;
 import game.platformer.ui.LevelCompletedOverlay;
 import game.platformer.ui.PauseOverlay;
 import game.platformer.utils.LoadSave;
@@ -22,6 +23,7 @@ public class Playing extends State implements StateMethods {
     private HudPane hud;
     private PauseOverlay pauseOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
+    private GameOverOverlay gameOverOverlay;
     private Background backgroundManager;
     private ObjectManager objectManager;
 
@@ -52,8 +54,9 @@ public class Playing extends State implements StateMethods {
 
         this.hud = new HudPane(this.player);
         this.pauseOverlay = new PauseOverlay(this);
+        this.gameOverOverlay = new GameOverOverlay(this);
         this.levelCompletedOverlay = new LevelCompletedOverlay(this);
-        this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay);
+        this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay, this.gameOverOverlay);
         this.hud.getTimer().start();
     }
 
@@ -62,7 +65,8 @@ public class Playing extends State implements StateMethods {
         if (this.paused) {
             this.pauseOverlay.update();
         } else if (this.gameOver) {
-            System.out.println("Game Over!");
+            player.update();
+            this.gameOverOverlay.update();
         } else if (this.lvlCompleted) {
             this.levelCompletedOverlay.update();
         } else {
@@ -89,11 +93,14 @@ public class Playing extends State implements StateMethods {
             gc.setFill(Color.rgb(0, 0, 0, 0.5));
             this.hud.darken();
             gc.fillRect(0, 0, Game.getScreenWidth(), Game.getScreenHeight());
-            pauseOverlay.render();
+            this.pauseOverlay.render();
         } else if (gameOver) {
-            System.out.println("Rendering Game Over");
+            gc.setFill(Color.rgb(255, 0, 0, 0.3));
+            this.hud.darken();
+            gc.fillRect(0, 0, Game.getScreenWidth(), Game.getScreenHeight());
+            this.gameOverOverlay.render();
         } else if (lvlCompleted) {
-            levelCompletedOverlay.render(gc);
+            this.levelCompletedOverlay.render(gc);
         }
     }
 
@@ -103,8 +110,8 @@ public class Playing extends State implements StateMethods {
 
     public void loadNextLevel() {
         resetAll();
-        levelManager.loadNextLevel();
-        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+        this.levelManager.loadNextLevel();
+        this.player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
     }
 
     private void calcLvlOffset() {
@@ -146,6 +153,8 @@ public class Playing extends State implements StateMethods {
             this.pauseOverlay.mousePressed(e);
         } else if (lvlCompleted) {
             this.levelCompletedOverlay.mousePressed(e);
+        } else if (gameOver) {
+            this.gameOverOverlay.mousePressed(e);
         } else {
             if (e.getButton() == MouseButton.PRIMARY) {
                 if (this.player.getDashValue() == 100) {
@@ -159,6 +168,8 @@ public class Playing extends State implements StateMethods {
     public void mouseReleased(MouseEvent e) {
         if (this.paused) {
             this.pauseOverlay.mouseReleased(e);
+        } else if (gameOver) {
+            this.gameOverOverlay.mouseReleased(e);
         } else if (lvlCompleted) {
             this.levelCompletedOverlay.mouseReleased(e);
         }
@@ -168,6 +179,8 @@ public class Playing extends State implements StateMethods {
     public void mouseMoved(MouseEvent e) {
         if (this.paused) {
             this.pauseOverlay.mouseMoved(e);
+        } else if (gameOver) {
+            this.gameOverOverlay.mouseMoved(e);
         } else if (lvlCompleted) {
             this.levelCompletedOverlay.mouseMoved(e);
         }
@@ -264,6 +277,10 @@ public class Playing extends State implements StateMethods {
 
     public boolean getPause() {
         return this.paused;
+    }
+
+    public void setPlayerDying(boolean value) {
+        this.gameOver = value;
     }
 }
 

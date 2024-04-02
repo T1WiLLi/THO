@@ -59,13 +59,13 @@ public class Constants {
         public static final int JUMP = 2;
         public static final int FALLING = 3;
         public static final int GROUND = 4;
-        public static final int HIT = 5;
+        public static final int DEAD = 5;
 
         public static final int getSpriteAmount(int playerAction) {
             return switch (playerAction) {
+                case DEAD -> 8;
                 case RUNNING -> 6;
                 case IDLE -> 5;
-                case HIT -> 4;
                 case JUMP -> 3;
                 case GROUND -> 2;
                 case FALLING -> 1;
