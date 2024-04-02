@@ -40,35 +40,77 @@ public class ObjectManager {
         this.currentLevel = newLevel;
     }
 
-    public void update() {
-        checkSpikesTouched(this.playing.getPlayer());
+    private void rotateSpikeBalls(int[][] lvlData) {
+        for (SpikeBall sBall : this.currentLevel.getSpikeBalls()) {
+            sBall.update(lvlData);
+        }
+    }
+
+    private void checkSpikesBallTouched(Player p) {
+        for (SpikeBall sBall : this.currentLevel.getSpikeBalls()) {
+            if (sBall.getHitbox().intersects(p.getHitbox().getBoundsInLocal())) {
+                p.kill();
+            }
+        }
     }
 
     private void checkSpikesTouched(Player p) {
-        for (Spike s : currentLevel.getSpikes()) {
+        for (Spike s : this.currentLevel.getSpikes()) {
             if (s.getHitbox().intersects(p.getHitbox().getBoundsInLocal())) {
                 p.kill();
             }
         }
     }
 
-    public void render(GraphicsContext gc, int xLvlOffset) {
-        renderGrass(gc, xLvlOffset);
-        renderSpikes(gc, xLvlOffset);
+    public void update(double visibleAreaStart, double visibleAreaEnd) {
+        Player player = playing.getPlayer();
+        checkSpikesTouched(player);
+        checkSpikesBallTouched(player);
+
+        for (SpikeBall sBall : currentLevel.getSpikeBalls()) {
+            if (isInVisibleArea(sBall, visibleAreaStart, visibleAreaEnd)) {
+                rotateSpikeBalls(this.currentLevel.getLevelData());
+            }
+        }
     }
 
-    private void renderGrass(GraphicsContext gc, int xLvlOffset) {
+    public void render(GraphicsContext gc, double xLvlOffset, double visibleAreaStart, double visibleAreaEnd) {
+        renderGrass(gc, xLvlOffset, visibleAreaStart, visibleAreaEnd);
+        renderSpikes(gc, xLvlOffset, visibleAreaStart, visibleAreaEnd);
+        renderSpikesBall(gc, xLvlOffset, visibleAreaStart, visibleAreaEnd);
+    }
+
+    private void renderGrass(GraphicsContext gc, double xLvlOffset, double visibleAreaStart, double visibleAreaEnd) {
         for (Grass grass : currentLevel.getGrass()) {
-            gc.drawImage(grassImgs[grass.getType()], grass.getX() - xLvlOffset, grass.getY(),
-                    (int) (32 * Game.getScale()), (int) (32 * Game.getScale()));
+            if (isInVisibleArea(grass, visibleAreaStart, visibleAreaEnd))
+                gc.drawImage(grassImgs[grass.getType()], grass.getX() - xLvlOffset, grass.getY(),
+                        (int) (32 * Game.getScale()), (int) (32 * Game.getScale()));
         }
     }
 
-    private void renderSpikes(GraphicsContext gc, int xLvlOffset) {
+    private void renderSpikes(GraphicsContext gc, double xLvlOffset, double visibleAreaStart, double visibleAreaEnd) {
         for (Spike s : currentLevel.getSpikes()) {
-            gc.drawImage(spikeImg, (int) (s.getHitbox().getX() - xLvlOffset),
-                    (int) (s.getHitbox().getY() - s.getyDrawOffset()),
-                    SPIKE_WIDTH, SPIKE_HEIGHT);
+            if (isInVisibleArea(s, visibleAreaStart, visibleAreaEnd)) {
+                gc.drawImage(spikeImg, (int) (s.getHitbox().getX() - xLvlOffset),
+                        (int) (s.getHitbox().getY() - s.getyDrawOffset()),
+                        SPIKE_WIDTH, SPIKE_HEIGHT);
+            }
         }
+    }
+
+    private void renderSpikesBall(GraphicsContext gc, double xLvlOffset, double visibleAreaStart,
+            double visibleAreaEnd) {
+        for (SpikeBall sball : currentLevel.getSpikeBalls()) {
+            if (isInVisibleArea(sball, visibleAreaStart, visibleAreaEnd)) {
+                sball.render(gc, (int) xLvlOffset);
+            }
+        }
+    }
+
+    private boolean isInVisibleArea(GameObject gameObject, double visibleAreaStart, double visibleAreaEnd) {
+        double gameObjectX = gameObject.getHitbox().getX();
+        double gameObjectWidth = gameObject.getHitbox().getWidth();
+
+        return (gameObjectX + gameObjectWidth >= visibleAreaStart) && (gameObjectX <= visibleAreaEnd);
     }
 }

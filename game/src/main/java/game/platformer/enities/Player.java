@@ -69,10 +69,6 @@ public class Player extends Entity {
             updateAnimationTicks();
             setAnimation();
         } else {
-            state = DEAD;
-            this.setAnimation();
-            this.animationIndex = 0;
-            this.tickAnimation = 0;
             playing.setPlayerDying(true);
         }
     }
@@ -104,7 +100,7 @@ public class Player extends Entity {
         double deltaY = mouseY - hitbox.getY();
         double distanceToMouse = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-        if (deltaX > (hitbox.getX() - mouseX)) {
+        if (deltaX > (hitbox.getX() - (mouseX + xLvlOffset))) {
             facingRight = true;
         } else {
             facingRight = false;
@@ -337,10 +333,11 @@ public class Player extends Entity {
     public void resetAll() {
         resetDirBooleans();
         inAir = false;
-        this.facingRight = true;
+        facingRight = true;
         moving = false;
         state = IDLE;
-        // isAlive = true;
+        isAlive = true;
+        playerSpeed = 0.75f * Game.getScale();
 
         hitbox.setX(x);
         hitbox.setY(y);

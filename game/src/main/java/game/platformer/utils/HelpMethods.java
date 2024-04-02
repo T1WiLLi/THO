@@ -22,6 +22,23 @@ public class HelpMethods {
         return false;
     }
 
+    // This function is specifically for the Spike Ball
+    public static boolean canMoveHereSpikeBall(double x, double y, double width, double height, double angle,
+            int[][] lvlData) {
+        double minX = Math.min(x, x + width * Math.cos(Math.toRadians(angle)));
+        double minY = Math.min(y, y + height * Math.sin(Math.toRadians(angle)));
+        double maxX = Math.max(x, x + width * Math.cos(Math.toRadians(angle)));
+        double maxY = Math.max(y, y + height * Math.sin(Math.toRadians(angle)));
+
+        if (!isSolid((float) minX, (float) minY, lvlData) &&
+                !isSolid((float) maxX, (float) maxY, lvlData) &&
+                !isSolid((float) maxX, (float) minY, lvlData) &&
+                !isSolid((float) minX, (float) maxY, lvlData)) {
+            return true;
+        }
+        return false;
+    }
+
     private static boolean isSolid(float x, float y, int[][] lvlData) {
         int maxWidth = lvlData[0].length * Game.getTilesSize();
         if (x < 0 || x >= maxWidth)

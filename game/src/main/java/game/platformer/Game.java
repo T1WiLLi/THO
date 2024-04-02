@@ -160,7 +160,7 @@ public class Game extends Application implements Runnable {
                     Platform.exit();
                     System.exit(0);
                 }
-                default -> System.out.println("Error");
+                default -> System.out.println("QUIT");
             }
             ;
             this.username.setText("Connected as: " + this.user.getUsername());
@@ -173,7 +173,9 @@ public class Game extends Application implements Runnable {
                 case MENU -> this.menu.render(this.gamePanel.getGraphicsContext());
                 case PLAYING -> this.playing.render(this.gamePanel.getGraphicsContext());
                 case OPTIONS -> gameOptions.render(this.gamePanel.getGraphicsContext());
-                default -> System.out.println("Error");
+                case QUIT -> {
+                    return;
+                }
             }
             ;
         });

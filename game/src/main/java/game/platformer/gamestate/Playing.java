@@ -36,6 +36,9 @@ public class Playing extends State implements StateMethods {
     private int rightBorder = (int) (0.5 * Game.getScreenWidth());
     private int maxLvlOffsetX;
 
+    double visibleAreaStart;
+    double visibleAreaEnd;
+
     public Playing(Game game) {
         super(game);
         initClasses();
@@ -62,6 +65,9 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void update() {
+        double buffer = (visibleAreaEnd - visibleAreaStart) * 0.2;
+        this.visibleAreaStart = xLvlOffset - buffer;
+        this.visibleAreaEnd = xLvlOffset + Game.getScreenWidth() + buffer;
         if (this.paused) {
             this.pauseOverlay.update();
         } else if (this.gameOver) {
@@ -70,7 +76,7 @@ public class Playing extends State implements StateMethods {
         } else if (this.lvlCompleted) {
             this.levelCompletedOverlay.update();
         } else {
-            this.objectManager.update();
+            this.objectManager.update(this.visibleAreaStart, this.visibleAreaEnd);
             this.levelManager.update();
             this.player.update();
             this.hud.update();
@@ -85,7 +91,7 @@ public class Playing extends State implements StateMethods {
         this.backgroundManager.render(gc, xLvlOffset);
 
         this.levelManager.render(gc, xLvlOffset);
-        this.objectManager.render(gc, xLvlOffset);
+        this.objectManager.render(gc, xLvlOffset, this.visibleAreaStart, this.visibleAreaEnd);
         this.hud.render();
         this.player.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
 

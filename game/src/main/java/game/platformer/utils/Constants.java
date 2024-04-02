@@ -10,15 +10,25 @@ public class Constants {
     public static class ObjectConstants {
         public static final int GRASS = 0;
         public static final int SPIKE = 1;
+        public static final int SPIKE_BALL = 2;
+        public static final int ATTACH_SPIKE_POINT = 3;
 
         public static final int SPIKE_WIDTH_DEFAULT = 32;
         public static final int SPIKE_HEIGHT_DEFAULT = 32;
         public static final int SPIKE_WIDTH = (int) (Game.getScale() * SPIKE_WIDTH_DEFAULT);
         public static final int SPIKE_HEIGHT = (int) (Game.getScale() * SPIKE_HEIGHT_DEFAULT);
+        public static final int SPIKED_BALL_WIDTH_DEFAULT = 28;
+        public static final int SPIKED_BALL_HEIGHT_DEFAULT = 28;
+        public static final int SPIKE_BALL_WIDTH = (int) (Game.getScale() * SPIKED_BALL_WIDTH_DEFAULT);
+        public static final int SPIKE_BALL_HEIGHT = (int) (Game.getScale() * SPIKED_BALL_HEIGHT_DEFAULT);
+        public static final int CHAIN_WIDTH_DEFAULT = 8;
+        public static final int CHAIN_HEIGHT_DEFAULT = 8;
+        public static final int CHAIN_WIDTH = (int) (Game.getScale() * CHAIN_WIDTH_DEFAULT);
+        public static final int CHAIN_HEIGHT = (int) (Game.getScale() * CHAIN_HEIGHT_DEFAULT);
 
         public static int getSpriteAmount(int object_type) {
             return switch (object_type) {
-                case GRASS, SPIKE -> 1;
+                case GRASS, SPIKE, SPIKE_BALL -> 1;
                 default -> 1;
             };
         }

@@ -35,18 +35,16 @@ public class GameObject {
         animationIndex = 0;
         tickAnimation = 0;
         active = true;
-
-        // TODO: Add if here
         doAnimation = true;
     }
 
     protected void initHitbox(int width, int height) {
-        hitbox = new Rectangle(x, y, width, height);
+        hitbox = new Rectangle(this.x, this.y, width, height);
     }
 
-    public void drawHitbox(GraphicsContext gc) {
+    public void drawHitbox(GraphicsContext gc, int xOffset) {
         gc.setStroke(Color.RED);
-        gc.strokeRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+        gc.strokeRect(hitbox.getX() - xOffset, hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
     }
 
     public int getObjType() {

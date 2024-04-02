@@ -22,6 +22,8 @@ public class LoadSave {
     // Objects
     public static final String GRASS_OBJ = "sprite/grass_atlas.png";
     public static final String SPIKE_OBJ = "sprite/trap_atlas.png";
+    public static final String SPIKE_BALL_OBJ = "sprite/Spiked_ball.png";
+    public static final String CHAIN_OBJ = "sprite/Chain.png";
 
     // Props
     public static final String PROPS = "props/tree.png";

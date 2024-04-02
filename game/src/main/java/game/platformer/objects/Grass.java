@@ -1,12 +1,10 @@
 package game.platformer.objects;
 
-public class Grass {
-    private int x, y, type;
+public class Grass extends GameObject {
 
-    public Grass(int x, int y, int type) {
-        this.x = x;
-        this.y = y;
-        this.type = type;
+    public Grass(int x, int y, int objType) {
+        super(x, y, objType);
+        initHitbox(0, 0);
     }
 
     public int getX() {
@@ -19,6 +17,6 @@ public class Grass {
     }
 
     public int getType() {
-        return type;
+        return this.objType;
     }
 }
