@@ -32,10 +32,22 @@ CREATE TABLE score (
 CREATE OR REPLACE FUNCTION update_score()
 RETURNS TRIGGER AS $$
 BEGIN
+    -- Delete old scores
     DELETE FROM score
     WHERE user_id = NEW.user_id
     AND level_id = NEW.level_id
     AND NEW.timestamp < timestamp;
+
+    -- Delete user and their scores if no new scores added in 3 months
+    IF NOT EXISTS (
+        SELECT 1
+        FROM score
+        WHERE user_id = NEW.user_id
+        AND timestamp >= CURRENT_TIMESTAMP - INTERVAL '3 months'
+    ) THEN
+        DELETE FROM score WHERE user_id = NEW.user_id;
+        DELETE FROM app_user WHERE id = NEW.user_id;
+    END IF;
 
     RETURN NEW;
 END;

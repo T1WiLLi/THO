@@ -202,6 +202,8 @@ public class Player extends Entity {
     }
 
     public void kill() {
+        this.playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
+        this.playing.getGame().getAudioPlayer().stopSong();
         this.isAlive = false;
     }
 
@@ -337,6 +339,8 @@ public class Player extends Entity {
         moving = false;
         state = IDLE;
         isAlive = true;
+        jump = false;
+        airSpeed = 0f;
         playerSpeed = 0.75f * Game.getScale();
 
         hitbox.setX(x);

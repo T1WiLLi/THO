@@ -5,6 +5,7 @@ import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
 import game.platformer.objects.ObjectManager;
+import game.platformer.shader.Particles;
 import game.platformer.ui.Background;
 import game.platformer.ui.GameOverOverlay;
 import game.platformer.ui.LevelCompletedOverlay;
@@ -26,6 +27,9 @@ public class Playing extends State implements StateMethods {
     private GameOverOverlay gameOverOverlay;
     private Background backgroundManager;
     private ObjectManager objectManager;
+
+    // Shader section
+    private Particles particles;
 
     private boolean paused;
     private boolean gameOver = false;
@@ -58,6 +62,7 @@ public class Playing extends State implements StateMethods {
         this.hud = new HudPane(this.player);
         this.pauseOverlay = new PauseOverlay(this);
         this.gameOverOverlay = new GameOverOverlay(this);
+        this.particles = new Particles();
         this.levelCompletedOverlay = new LevelCompletedOverlay(this);
         this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay, this.gameOverOverlay);
         this.hud.getTimer().start();
@@ -77,6 +82,7 @@ public class Playing extends State implements StateMethods {
             this.levelCompletedOverlay.update();
         } else {
             this.objectManager.update(this.visibleAreaStart, this.visibleAreaEnd);
+            this.particles.update(xLvlOffset);
             this.levelManager.update();
             this.player.update();
             this.hud.update();
@@ -92,6 +98,7 @@ public class Playing extends State implements StateMethods {
 
         this.levelManager.render(gc, xLvlOffset);
         this.objectManager.render(gc, xLvlOffset, this.visibleAreaStart, this.visibleAreaEnd);
+        this.particles.render(gc, xLvlOffset);
         this.hud.render();
         this.player.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
 
@@ -117,6 +124,7 @@ public class Playing extends State implements StateMethods {
     public void loadNextLevel() {
         resetAll();
         this.levelManager.loadNextLevel();
+        this.particles.setRainRendering();
         this.player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
     }
 
@@ -251,10 +259,6 @@ public class Playing extends State implements StateMethods {
 
     public void setMaxLvlOffset(int lvlOffset) {
         this.maxLvlOffsetX = lvlOffset;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
     }
 
     public void unpauseGame() {

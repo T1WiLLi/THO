@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import game.platformer.Game;
+import game.platformer.gamestate.Playing;
 import game.platformer.objects.Grass;
 import game.platformer.objects.Spike;
 import game.platformer.objects.SpikeBall;

@@ -8,6 +8,7 @@ import static game.platformer.utils.HelpMethods.canMoveHere;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,7 +20,7 @@ public class SpikeBall extends GameObject {
     private Point closestAttachPoint;
 
     private double rotationAngle;
-    private double rotationSpeed = 0.5;
+    private double rotationSpeed;
 
     public SpikeBall(int x, int y, int objType) {
         super(x, y, objType);
@@ -31,6 +32,25 @@ public class SpikeBall extends GameObject {
         hitbox.setX(adjustedX);
         hitbox.setY(adjustedY);
         this.rotationAngle = 0.0;
+        generateRandomRotationSpeed(); // Generates a random number between -1.5 and 1.5
+    }
+
+    private void generateRandomRotationSpeed() {
+        Random random = new Random();
+        boolean usePositiveRange = random.nextBoolean();
+
+        double minSpeed = 0.3;
+        double maxSpeed = 1.5;
+        double positiveRange = maxSpeed - minSpeed;
+        double negativeRange = -minSpeed - (-maxSpeed);
+
+        double speed;
+        if (usePositiveRange) {
+            speed = random.nextDouble() * positiveRange + minSpeed;
+        } else {
+            speed = random.nextDouble() * negativeRange - maxSpeed;
+        }
+        this.rotationSpeed = speed;
     }
 
     public Point findClosestAttachPoint(int x, int y, ArrayList<Point> attachPoints) {
@@ -74,7 +94,7 @@ public class SpikeBall extends GameObject {
     }
 
     public void render(GraphicsContext gc, int xOffset) {
-        double adjustedRotationAngle = rotationAngle * 2;
+        double adjustedRotationAngle = rotationAngle * 4;
         gc.save();
         gc.translate(hitbox.getX() + SPIKE_BALL_WIDTH / 2 - xOffset - ((SPIKE_BALL_WIDTH / 2) / 2),
                 hitbox.getY() + SPIKE_BALL_HEIGHT / 2 - ((SPIKE_BALL_HEIGHT / 2) / 2));
