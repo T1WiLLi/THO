@@ -3,11 +3,12 @@ package game.platformer.objects;
 import static game.platformer.utils.Constants.ANIMATION_SPEED;
 import static game.platformer.utils.Constants.ObjectConstants.*;
 
+import game.platformer.Renderable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class GameObject {
+public class GameObject implements Renderable {
     protected int x, y, objType;
     protected Rectangle hitbox;
     protected boolean doAnimation, active = true;
@@ -51,6 +52,7 @@ public class GameObject {
         return objType;
     }
 
+    @Override
     public Rectangle getHitbox() {
         return hitbox;
     }

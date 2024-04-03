@@ -75,6 +75,7 @@ public class GameOverOverlay extends Canvas {
                 this.playing.resetAll();
                 this.playing.getHudPane().clearCanvas();
                 this.playing.getHudPane().getTimer().stop();
+                this.playing.getLightManager().resetGraphicsContext();
                 this.playing.setGameState(GameState.MENU);
             }
         } else if (isIn(this.play, e))

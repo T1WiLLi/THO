@@ -16,4 +16,5 @@ module game.platformer {
     exports game.platformer.database;
     exports game.platformer.audio;
     exports game.platformer.objects;
+    exports game.platformer.shader;
 }

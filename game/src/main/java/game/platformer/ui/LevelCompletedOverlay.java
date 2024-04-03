@@ -71,6 +71,7 @@ public class LevelCompletedOverlay {
                 this.playing.setPause(false);
                 this.playing.getHudPane().clearCanvas();
                 this.playing.getHudPane().getTimer().stop();
+                this.playing.getLightManager().resetGraphicsContext();
                 this.playing.resetAll();
                 playing.setGameState(GameState.MENU);
             }

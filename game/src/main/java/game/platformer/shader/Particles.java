@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 public class Particles {
     // Class for particles... Such as Rain, ash, dirt, dust. ect. We need an option
     // to disable it. Using JavaFX canvas.
+    private boolean particlesOn = true;
 
     private Rain rain;
 
@@ -19,11 +20,15 @@ public class Particles {
     }
 
     public void update(int xLvlOffset) {
-        this.rain.update(xLvlOffset);
+        if (this.particlesOn) {
+            this.rain.update(xLvlOffset);
+        }
     }
 
     public void render(GraphicsContext gc, int xLvlOffset) {
-        this.rain.render(gc, xLvlOffset);
+        if (this.particlesOn) {
+            this.rain.render(gc, xLvlOffset);
+        }
     }
 
     public void setRainRendering() {

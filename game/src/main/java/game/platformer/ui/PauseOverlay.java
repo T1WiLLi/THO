@@ -88,6 +88,7 @@ public class PauseOverlay extends Canvas {
             if (menuB.isMousePressed()) {
                 playing.setPause(false);
                 playing.getHudPane().clearCanvas();
+                playing.getLightManager().resetGraphicsContext();
                 playing.setGameState(GameState.MENU);
             }
         } else if (isIn(e, unpauseB)) {

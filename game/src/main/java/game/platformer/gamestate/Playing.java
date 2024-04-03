@@ -5,6 +5,7 @@ import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
 import game.platformer.levels.LevelManager;
 import game.platformer.objects.ObjectManager;
+import game.platformer.shader.LightManager;
 import game.platformer.shader.Particles;
 import game.platformer.ui.Background;
 import game.platformer.ui.GameOverOverlay;
@@ -27,6 +28,8 @@ public class Playing extends State implements StateMethods {
     private GameOverOverlay gameOverOverlay;
     private Background backgroundManager;
     private ObjectManager objectManager;
+
+    private LightManager lightManager;
 
     // Shader section
     private Particles particles;
@@ -62,9 +65,11 @@ public class Playing extends State implements StateMethods {
         this.hud = new HudPane(this.player);
         this.pauseOverlay = new PauseOverlay(this);
         this.gameOverOverlay = new GameOverOverlay(this);
+        this.lightManager = new LightManager(this);
         this.particles = new Particles();
         this.levelCompletedOverlay = new LevelCompletedOverlay(this);
-        this.game.getGamePane().getChildren().addAll(this.hud, this.pauseOverlay, this.gameOverOverlay);
+        this.game.getGamePane().getChildren().addAll(this.lightManager, this.hud, this.pauseOverlay,
+                this.gameOverOverlay);
         this.hud.getTimer().start();
     }
 
@@ -81,6 +86,7 @@ public class Playing extends State implements StateMethods {
         } else if (this.lvlCompleted) {
             this.levelCompletedOverlay.update();
         } else {
+            this.lightManager.update();
             this.objectManager.update(this.visibleAreaStart, this.visibleAreaEnd);
             this.particles.update(xLvlOffset);
             this.levelManager.update();
@@ -98,6 +104,7 @@ public class Playing extends State implements StateMethods {
 
         this.levelManager.render(gc, xLvlOffset);
         this.objectManager.render(gc, xLvlOffset, this.visibleAreaStart, this.visibleAreaEnd);
+        this.lightManager.render(xLvlOffset);
         this.particles.render(gc, xLvlOffset);
         this.hud.render();
         this.player.render(this.game.getGamePane().getGraphicsContext(), xLvlOffset);
@@ -271,6 +278,10 @@ public class Playing extends State implements StateMethods {
 
     public ObjectManager getObjectManager() {
         return this.objectManager;
+    }
+
+    public LightManager getLightManager() {
+        return this.lightManager;
     }
 
     public HudPane getHudPane() {
