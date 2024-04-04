@@ -4,20 +4,25 @@ import game.platformer.Game;
 import game.platformer.gamestate.GameState;
 import game.platformer.gamestate.Playing;
 import game.platformer.utils.LoadSave;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 import static game.platformer.utils.Constants.UI.URMButtons.URM_SIZE;
 
-public class LevelCompletedOverlay {
+public class LevelCompletedOverlay extends Canvas {
 
     private Playing playing;
     private UrmButton menu, next;
     private Image background;
     private int bgX, bgY, bgWidth, bgHeight;
 
+    private GraphicsContext gc;
+
     public LevelCompletedOverlay(Playing playing) {
+        super(Game.getScreenWidth(), Game.getScreenHeight());
+        this.gc = this.getGraphicsContext2D();
         this.playing = playing;
         initBackground();
         initButtons();
@@ -44,10 +49,10 @@ public class LevelCompletedOverlay {
         this.menu.update();
     }
 
-    public void render(GraphicsContext gc) {
-        gc.drawImage(this.background, this.bgX, this.bgY, this.bgWidth, this.bgHeight);
-        this.next.render(gc);
-        this.menu.render(gc);
+    public void render() {
+        this.gc.drawImage(this.background, this.bgX, this.bgY, this.bgWidth, this.bgHeight);
+        this.next.render(this.gc);
+        this.menu.render(this.gc);
     }
 
     public void mouseMoved(MouseEvent e) {
@@ -79,6 +84,7 @@ public class LevelCompletedOverlay {
 
         this.next.resetBools();
         this.menu.resetBools();
+        this.resetGraphicsContext();
     }
 
     public void mousePressed(MouseEvent e) {
@@ -91,5 +97,9 @@ public class LevelCompletedOverlay {
 
     private boolean isIn(MouseEvent e, UrmButton b) {
         return (b.getBounds().contains(e.getX(), e.getY()));
+    }
+
+    public void resetGraphicsContext() {
+        this.gc.clearRect(0, 0, getWidth(), getHeight());
     }
 }

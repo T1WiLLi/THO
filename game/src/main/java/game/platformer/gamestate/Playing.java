@@ -69,7 +69,7 @@ public class Playing extends State implements StateMethods {
         this.particles = new Particles();
         this.levelCompletedOverlay = new LevelCompletedOverlay(this);
         this.game.getGamePane().getChildren().addAll(this.lightManager, this.hud, this.pauseOverlay,
-                this.gameOverOverlay);
+                this.gameOverOverlay, this.levelCompletedOverlay);
         this.hud.getTimer().start();
     }
 
@@ -88,7 +88,7 @@ public class Playing extends State implements StateMethods {
         } else {
             this.lightManager.update();
             this.objectManager.update(this.visibleAreaStart, this.visibleAreaEnd);
-            this.particles.update(xLvlOffset);
+            this.particles.update(xLvlOffset, this.levelManager.getCurrentLevel().getLevelData());
             this.levelManager.update();
             this.player.update();
             this.hud.update();
@@ -120,7 +120,7 @@ public class Playing extends State implements StateMethods {
             gc.fillRect(0, 0, Game.getScreenWidth(), Game.getScreenHeight());
             this.gameOverOverlay.render();
         } else if (lvlCompleted) {
-            this.levelCompletedOverlay.render(gc);
+            this.levelCompletedOverlay.render();
         }
     }
 
@@ -133,6 +133,8 @@ public class Playing extends State implements StateMethods {
         this.levelManager.loadNextLevel();
         this.particles.setRainRendering();
         this.player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+
+        System.out.println("Loading next Level!");
     }
 
     private void calcLvlOffset() {

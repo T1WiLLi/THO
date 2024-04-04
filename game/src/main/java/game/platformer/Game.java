@@ -83,7 +83,7 @@ public class Game extends Application implements Runnable {
         gamePanel.addEventFilter(MouseEvent.ANY, mouseHandler);
 
         gameScene = new Scene(gamePanel, SCREEN_WIDTH, SCREEN_HEIGHT);
-        gameScene.setCursor(new ImageCursor(LoadSave.getSprite(LoadSave.CURSOR)));
+        // gameScene.setCursor(new ImageCursor(LoadSave.getSprite(LoadSave.CURSOR)));
         gamePanel.requestFocus();
 
         gameStage.setScene(gameScene);

@@ -39,7 +39,7 @@ public class HelpMethods {
         return false;
     }
 
-    private static boolean isSolid(float x, float y, int[][] lvlData) {
+    public static boolean isSolid(float x, float y, int[][] lvlData) {
         int maxWidth = lvlData[0].length * Game.getTilesSize();
         if (x < 0 || x >= maxWidth)
             return true;
@@ -51,7 +51,24 @@ public class HelpMethods {
         return isTileSolid((int) xIndex, (int) yIndex, lvlData);
     }
 
-    public static boolean isTileSolid(int xTile, int yTile, int[][] lvlData) {
+    public static boolean canRainDrop(float x, float y, int[][] lvlData) {
+        int maxWidth = lvlData[0].length * Game.getTilesSize();
+        if (x < 0 || x >= maxWidth)
+            return true;
+        if (y < 0 || y >= Game.getScreenHeight())
+            return true;
+        float xIndex = x / Game.getTilesSize();
+        float yIndex = y / Game.getTilesSize();
+
+        int value = lvlData[(int) yIndex][(int) xIndex];
+
+        return switch (value) {
+            case 0, 1, 2, 3, 30, 31, 33, 34, 35, 36, 37, 38, 39 -> false;
+            default -> true;
+        };
+    }
+
+    private static boolean isTileSolid(int xTile, int yTile, int[][] lvlData) {
         int value = lvlData[yTile][xTile];
 
         switch (value) {
@@ -60,7 +77,6 @@ public class HelpMethods {
             default:
                 return true;
         }
-
     }
 
     public static float getEntityXPosNextToWall(Rectangle hitbox, float xSpeed) {
@@ -72,6 +88,20 @@ public class HelpMethods {
         } else {
             return currentTile * Game.getTilesSize();
         }
+    }
+
+    public static boolean IsEntityInWater(Rectangle hitbox, int[][] lvlData) {
+        if (GetTileValue((float) hitbox.getX(), (float) (hitbox.getY() + hitbox.getHeight()), lvlData) != 48)
+            if (GetTileValue((float) (hitbox.getX() + hitbox.getWidth()), (float) (hitbox.getY() + hitbox.getHeight()),
+                    lvlData) != 48)
+                return false;
+        return true;
+    }
+
+    private static int GetTileValue(float xPos, float yPos, int[][] lvlData) {
+        int xCord = (int) (xPos / Game.getTilesSize());
+        int yCord = (int) (yPos / Game.getTilesSize());
+        return lvlData[yCord][xCord];
     }
 
     public static float getEntityYPosUnderRoofOrAboveFloor(Rectangle hitbox, float airSpeed) {

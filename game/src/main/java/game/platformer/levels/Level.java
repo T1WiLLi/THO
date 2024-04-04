@@ -8,7 +8,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import game.platformer.Game;
-import game.platformer.gamestate.Playing;
 import game.platformer.objects.Grass;
 import game.platformer.objects.Spike;
 import game.platformer.objects.SpikeBall;
@@ -67,7 +66,7 @@ public class Level {
     }
 
     private void loadLevelData(int redValue, int x, int y) {
-        if (redValue >= 50) {
+        if (redValue >= 52) {
             this.lvlData[y][x] = 0;
         } else {
             this.lvlData[y][x] = redValue;

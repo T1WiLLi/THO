@@ -1,2 +1,0 @@
-For spawn point : G-100
-For tiles : R-(0-47);

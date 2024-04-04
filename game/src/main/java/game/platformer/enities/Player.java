@@ -68,6 +68,7 @@ public class Player extends Entity {
             updateDash(System.currentTimeMillis());
             updateAnimationTicks();
             setAnimation();
+            checkInsideWater();
         } else {
             playing.setPlayerDying(true);
         }
@@ -85,6 +86,11 @@ public class Player extends Entity {
         if (!facingRight) {
             gc.restore();
         }
+    }
+
+    private void checkInsideWater() {
+        if (IsEntityInWater(hitbox, playing.getLevelManager().getCurrentLevel().getLevelData()))
+            this.kill();
     }
 
     private void updateDash(long currentTime) {

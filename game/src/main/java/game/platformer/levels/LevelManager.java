@@ -17,8 +17,9 @@ public class LevelManager {
     private Playing playing;
 
     private WritableImage[] sprites;
+    private WritableImage[] waterSprite;
     private ArrayList<Level> levels;
-    private int lvlIndex = 0;
+    private int lvlIndex = 0, aniTick, aniIndex;
 
     private int widthInTile;
     private int heightInTile;
@@ -29,8 +30,22 @@ public class LevelManager {
         this.widthInTile = widthInTile;
         this.heightInTile = heightInTile;
         importOutsideSprites(imageString, AmountOfSprite);
+        createWater();
         this.levels = new ArrayList<>();
         buildAllLevels();
+    }
+
+    private void createWater() {
+        this.waterSprite = new WritableImage[5];
+        Image img = LoadSave.getSprite(LoadSave.WATER_TOP);
+        for (int i = 0; i < 4; i++) {
+            this.waterSprite[i] = new WritableImage(img.getPixelReader(), i * 32, 0, 32, 32);
+        }
+
+        Image bottomImg = LoadSave.getSprite(LoadSave.WATER_BOTTOM);
+        int width = (int) bottomImg.getWidth();
+        int height = (int) bottomImg.getHeight();
+        this.waterSprite[4] = new WritableImage(bottomImg.getPixelReader(), width, height);
     }
 
     private void importOutsideSprites(String imageString, int AmountOfSprite) {
@@ -76,17 +91,37 @@ public class LevelManager {
 
     public void update() {
         if (HelpMethods.hasPlayerFinishedLevel(getCurrentLevel(), this.playing.getPlayer())) {
+            System.out.println("Level finished!");
             this.playing.setLevelCompleted(true);
         }
+        updateWaterAnimation();
     }
 
     public void render(GraphicsContext gc, int xLvlOffset) {
         for (int j = 0; j < Game.getTilesInHeight(); j++) {
             for (int i = 0; i < this.levels.get(this.lvlIndex).getLevelData()[0].length; i++) {
                 int index = this.levels.get(this.lvlIndex).getSpriteIndex(i, j);
-                gc.drawImage(sprites[index], Game.getTilesSize() * i - xLvlOffset, Game.getTilesSize() * j,
-                        Game.getTilesSize(),
-                        Game.getTilesSize());
+                int x = Game.getTilesSize() * i - xLvlOffset;
+                int y = Game.getTilesSize() * j;
+                if (index == 48) {
+                    gc.drawImage(this.waterSprite[aniIndex], x, y, Game.getTilesSize(), Game.getTilesSize());
+                } else if (index == 49) {
+                    gc.drawImage(this.waterSprite[4], x, y, Game.getTilesSize(), Game.getTilesSize());
+                } else {
+                    gc.drawImage(this.sprites[index], x, y, Game.getTilesSize(), Game.getTilesSize());
+                }
+            }
+        }
+    }
+
+    private void updateWaterAnimation() {
+        this.aniTick++;
+        if (aniTick >= 40) {
+            aniTick = 0;
+            aniIndex++;
+
+            if (aniIndex >= 4) {
+                aniIndex = 0;
             }
         }
     }

@@ -8,20 +8,21 @@ import game.platformer.utils.LoadSave;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import static game.platformer.utils.HelpMethods.canRainDrop;
+
 public class Particles {
     // Class for particles... Such as Rain, ash, dirt, dust. ect. We need an option
-    // to disable it. Using JavaFX canvas.
+    // to disable it.
     private boolean particlesOn = true;
-
     private Rain rain;
 
     public Particles() {
         this.rain = new Rain();
     }
 
-    public void update(int xLvlOffset) {
+    public void update(int xLvlOffset, int[][] lvlData) {
         if (this.particlesOn) {
-            this.rain.update(xLvlOffset);
+            this.rain.update(xLvlOffset, lvlData);
         }
     }
 
@@ -58,12 +59,14 @@ public class Particles {
             }
         }
 
-        public void update(int xLvlOffset) {
-            for (Point point : this.drops) {
-                point.y += this.rainSpeed;
-                if (point.y >= Game.getScreenHeight()) {
-                    point.y = -20;
-                    point.x = (int) getNewX(xLvlOffset);
+        public void update(int xLvlOffset, int[][] lvlData) {
+            if (this.renderRain) {
+                for (Point point : this.drops) {
+                    point.y += this.rainSpeed;
+                    if (!canRainDrop(point.x, point.y, lvlData) || point.y > Game.getScreenHeight()) {
+                        point.y = -20; // Reset Y position above the screen
+                        point.x = (int) getNewX(xLvlOffset); // Randomize X position
+                    }
                 }
             }
         }
@@ -87,8 +90,10 @@ public class Particles {
 
         public void setDrawRainBoolean() {
             if (rand.nextFloat() >= 0.8f) {
+                System.out.println("Raining!");
                 renderRain = true;
             } else {
+                System.out.println("Not Raining!");
                 renderRain = false;
             }
         }

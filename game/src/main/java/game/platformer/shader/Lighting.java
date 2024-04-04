@@ -35,8 +35,6 @@ public class Lighting {
         double centerX = source.getHitbox().getX();
         double centerY = source.getHitbox().getY();
 
-        double transparency = this.filterAlpha;
-
         RadialGradient radialGradient = new RadialGradient(
                 0, 0,
                 centerX - xLvlOffset + source.getHitbox().getWidth() / 2,
@@ -44,7 +42,7 @@ public class Lighting {
                 this.lightRadius,
                 false, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.TRANSPARENT),
-                new Stop(1, Color.rgb(rgbValue[0], rgbValue[1], rgbValue[2], transparency)));
+                new Stop(1, Color.rgb(rgbValue[0], rgbValue[1], rgbValue[2], this.filterAlpha)));
 
         gc.setFill(radialGradient);
         gc.setGlobalBlendMode(BlendMode.SOFT_LIGHT);
