@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 public class GameObject implements Renderable {
     protected int x, y, objType;
     protected Rectangle hitbox;
-    protected boolean doAnimation, active = true;
+    protected boolean doAnimation = false;
     protected int tickAnimation = 0, animationIndex = 0;
     protected int xDrawOffset, yDrawOffset;
 
@@ -21,7 +21,7 @@ public class GameObject implements Renderable {
         this.objType = objType;
     }
 
-    private void updateAnimationTicks() {
+    protected void updateAnimationTicks() {
         tickAnimation++;
         if (tickAnimation >= ANIMATION_SPEED) {
             tickAnimation = 0;
@@ -35,7 +35,6 @@ public class GameObject implements Renderable {
     public void reset() {
         animationIndex = 0;
         tickAnimation = 0;
-        active = true;
         doAnimation = true;
     }
 
@@ -55,14 +54,6 @@ public class GameObject implements Renderable {
     @Override
     public Rectangle getHitbox() {
         return hitbox;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean value) {
-        this.active = value;
     }
 
     public int getxDrawOffset() {

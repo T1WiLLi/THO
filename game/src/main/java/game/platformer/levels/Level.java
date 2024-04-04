@@ -1,6 +1,7 @@
 package game.platformer.levels;
 
 import static game.platformer.utils.Constants.ObjectConstants.ATTACH_SPIKE_POINT;
+import static game.platformer.utils.Constants.ObjectConstants.RUNE;
 import static game.platformer.utils.Constants.ObjectConstants.SPIKE;
 import static game.platformer.utils.Constants.ObjectConstants.SPIKE_BALL;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 
 import game.platformer.Game;
 import game.platformer.objects.Grass;
+import game.platformer.objects.Rune;
 import game.platformer.objects.Spike;
 import game.platformer.objects.SpikeBall;
 import javafx.scene.image.Image;
@@ -28,6 +30,7 @@ public class Level {
     private ArrayList<Spike> spikes = new ArrayList<>();
     private ArrayList<SpikeBall> spikeBalls = new ArrayList<>();
     private ArrayList<Point> attachPoint = new ArrayList<>();
+    private ArrayList<Rune> runes = new ArrayList<>();
 
     public Level(Image image) {
         this.image = image;
@@ -98,6 +101,7 @@ public class Level {
                         .add(new SpikeBall(x * Game.getTilesSize(), y * Game.getTilesSize(), SPIKE_BALL));
             case ATTACH_SPIKE_POINT ->
                 this.attachPoint.add(new Point(x * Game.getTilesSize(), y * Game.getTilesSize()));
+            case RUNE -> this.runes.add(new Rune(x * Game.getTilesSize(), y * Game.getTilesSize(), RUNE));
         }
     }
 
@@ -137,5 +141,9 @@ public class Level {
 
     public ArrayList<SpikeBall> getSpikeBalls() {
         return this.spikeBalls;
+    }
+
+    public ArrayList<Rune> getRunes() {
+        return this.runes;
     }
 }

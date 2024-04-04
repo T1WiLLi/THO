@@ -15,7 +15,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
-import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -83,7 +82,6 @@ public class Game extends Application implements Runnable {
         gamePanel.addEventFilter(MouseEvent.ANY, mouseHandler);
 
         gameScene = new Scene(gamePanel, SCREEN_WIDTH, SCREEN_HEIGHT);
-        // gameScene.setCursor(new ImageCursor(LoadSave.getSprite(LoadSave.CURSOR)));
         gamePanel.requestFocus();
 
         gameStage.setScene(gameScene);

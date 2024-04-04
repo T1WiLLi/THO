@@ -132,6 +132,7 @@ public class Playing extends State implements StateMethods {
         resetAll();
         this.levelManager.loadNextLevel();
         this.particles.setRainRendering();
+        this.lightManager.setLightBoolean();
         this.player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
 
         System.out.println("Loading next Level!");

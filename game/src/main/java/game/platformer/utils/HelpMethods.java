@@ -1,11 +1,9 @@
 package game.platformer.utils;
 
 import game.platformer.Game;
-import game.platformer.enities.Player;
 import game.platformer.levels.Level;
+import game.platformer.objects.Rune;
 import javafx.scene.shape.Rectangle;
-
-import java.awt.Point;
 
 public class HelpMethods {
 
@@ -63,7 +61,7 @@ public class HelpMethods {
         int value = lvlData[(int) yIndex][(int) xIndex];
 
         return switch (value) {
-            case 0, 1, 2, 3, 30, 31, 33, 34, 35, 36, 37, 38, 39 -> false;
+            case 0, 1, 2, 3, 30, 31, 33, 34, 35, 36, 37, 38, 39, 48, 49, 50, 51 -> false;
             default -> true;
         };
     }
@@ -139,14 +137,15 @@ public class HelpMethods {
         return true;
     }
 
-    public static boolean hasPlayerFinishedLevel(Level level, Player player) {
-        int endOfLevel = level.getLevelData()[0].length * Game.getTilesSize(); // Get Width IN PX
-        Point spawnPoint = player.getSpawnPoint();
-
-        if (spawnPoint.getX() >= endOfLevel / 2) {
-            return player.getHitbox().getX() <= 100;
-        } else {
-            return player.getHitbox().getX() >= endOfLevel - 100;
+    public static boolean hasPlayerFinishedLevel(Level level) {
+        for (Rune rune : level.getRunes()) {
+            if (rune.hasPlayerPassedTheLevel()) {
+                rune.reset();
+                return true;
+            } else {
+                return false;
+            }
         }
+        return false;
     }
 }

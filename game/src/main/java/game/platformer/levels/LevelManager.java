@@ -37,12 +37,12 @@ public class LevelManager {
 
     private void createWater() {
         this.waterSprite = new WritableImage[5];
-        Image img = LoadSave.getSprite(LoadSave.WATER_TOP);
+        Image img = LoadSave.getSprite(LoadSave.LAVA_TOP);
         for (int i = 0; i < 4; i++) {
             this.waterSprite[i] = new WritableImage(img.getPixelReader(), i * 32, 0, 32, 32);
         }
 
-        Image bottomImg = LoadSave.getSprite(LoadSave.WATER_BOTTOM);
+        Image bottomImg = LoadSave.getSprite(LoadSave.LAVA_BOTTOM);
         int width = (int) bottomImg.getWidth();
         int height = (int) bottomImg.getHeight();
         this.waterSprite[4] = new WritableImage(bottomImg.getPixelReader(), width, height);
@@ -90,8 +90,7 @@ public class LevelManager {
     }
 
     public void update() {
-        if (HelpMethods.hasPlayerFinishedLevel(getCurrentLevel(), this.playing.getPlayer())) {
-            System.out.println("Level finished!");
+        if (HelpMethods.hasPlayerFinishedLevel(getCurrentLevel())) {
             this.playing.setLevelCompleted(true);
         }
         updateWaterAnimation();

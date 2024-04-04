@@ -39,7 +39,7 @@ public class Particles {
     private final class Rain {
         private Point[] drops;
         private Random rand;
-        private float rainSpeed = 1.25f;
+        private float rainSpeed = 3f;
         private Image rainParticle;
         private boolean renderRain = false;
 
@@ -62,10 +62,11 @@ public class Particles {
         public void update(int xLvlOffset, int[][] lvlData) {
             if (this.renderRain) {
                 for (Point point : this.drops) {
-                    point.y += this.rainSpeed;
-                    if (!canRainDrop(point.x, point.y, lvlData) || point.y > Game.getScreenHeight()) {
-                        point.y = -20; // Reset Y position above the screen
-                        point.x = (int) getNewX(xLvlOffset); // Randomize X position
+                    if (!canRainDrop(point.x, point.y + this.rainSpeed, lvlData) || point.y > Game.getScreenHeight()) {
+                        point.y = -20;
+                        point.x = (int) getNewX(xLvlOffset);
+                    } else {
+                        point.y += this.rainSpeed;
                     }
                 }
             }
@@ -90,12 +91,12 @@ public class Particles {
 
         public void setDrawRainBoolean() {
             if (rand.nextFloat() >= 0.8f) {
-                System.out.println("Raining!");
                 renderRain = true;
             } else {
-                System.out.println("Not Raining!");
                 renderRain = false;
             }
+
+            renderRain = true;
         }
     }
 }
