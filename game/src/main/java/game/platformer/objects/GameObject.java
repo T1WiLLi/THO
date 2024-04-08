@@ -67,4 +67,12 @@ public class GameObject implements Renderable {
     public int getAnimationIndex() {
         return animationIndex;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

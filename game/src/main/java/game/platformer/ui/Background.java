@@ -15,7 +15,7 @@ public class Background {
     private Image backgroundLayerTwo;
     private Image backgroundLayerThree;
 
-    private final int LAYER_WIDTH_DEFAULT = 320;
+    private final int LAYER_WIDTH_DEFAULT = (int) (320 * 1.2);
     private final int LAYER_WIDTH = (int) (this.LAYER_WIDTH_DEFAULT * Game.getScale());
 
     public Background(Playing playing) {
@@ -35,18 +35,18 @@ public class Background {
 
         for (int i = 0; i < amountOfLayerToBeDrawn; i++) {
             gc.drawImage(this.backgroundLayerOne, i * LAYER_WIDTH - (int) (xLvlOffset * 0.1),
-                    (Game.getTilesSize() * 3), LAYER_WIDTH,
-                    Game.getScreenHeight() - (Game.getTilesSize() * 7));
+                    (Game.getTilesSize() * 2), LAYER_WIDTH,
+                    Game.getScreenHeight() - (Game.getTilesSize() * 4));
         }
         for (int i = 0; i < amountOfLayerToBeDrawn; i++) {
             gc.drawImage(this.backgroundLayerTwo, i * LAYER_WIDTH - (int) (xLvlOffset * 0.25),
-                    (Game.getTilesSize() * 3), LAYER_WIDTH,
-                    Game.getScreenHeight() - (Game.getTilesSize() * 7));
+                    (Game.getTilesSize() * 2), LAYER_WIDTH,
+                    Game.getScreenHeight() - (Game.getTilesSize() * 4));
         }
         for (int i = 0; i < amountOfLayerToBeDrawn; i++) {
             gc.drawImage(this.backgroundLayerThree, i * LAYER_WIDTH - (int) (xLvlOffset * 0.5),
-                    (Game.getTilesSize() * 3), LAYER_WIDTH,
-                    Game.getScreenHeight() - (Game.getTilesSize() * 7));
+                    (Game.getTilesSize() * 2), LAYER_WIDTH,
+                    Game.getScreenHeight() - (Game.getTilesSize() * 4));
         }
     }
 }

@@ -13,6 +13,7 @@ public class Constants {
         public static final int SPIKE_BALL = 2;
         public static final int ATTACH_SPIKE_POINT = 3;
         public static final int RUNE = 4;
+        public static final int FP = 5;
 
         public static final int SPIKE_WIDTH_DEFAULT = 32;
         public static final int SPIKE_HEIGHT_DEFAULT = 32;
@@ -30,10 +31,15 @@ public class Constants {
         public static final int RUNE_HEIGHT_DEFAULT = 36;
         public static final int RUNE_WIDTH = (int) (Game.getScale() * RUNE_WIDTH_DEFAULT);
         public static final int RUNE_HEIGHT = (int) (Game.getScale() * RUNE_HEIGHT_DEFAULT);
+        public static final int FP_WIDTH_DEFAULT = 32;
+        public static final int FP_HEIGHT_DEFAULT = 10;
+        public static final int FP_WIDTH = (int) (Game.getScale() * FP_WIDTH_DEFAULT);
+        public static final int FP_HEIGHT = (int) (Game.getScale() * FP_HEIGHT_DEFAULT);
 
         public static int getSpriteAmount(int object_type) {
             return switch (object_type) {
                 case GRASS, SPIKE, SPIKE_BALL -> 1;
+                case FP -> 4;
                 case RUNE -> 11;
                 default -> 1;
             };

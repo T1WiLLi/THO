@@ -30,6 +30,7 @@ public class LoadSave {
     public static final String SPIKE_BALL_OBJ = "sprite/Spiked_ball.png";
     public static final String CHAIN_OBJ = "sprite/Chain.png";
     public static final String RUNE_OBJ = "sprite/rune_sprites.png";
+    public static final String FP_OBJ = "sprite/fp_atlas.png";
 
     // Props
     public static final String PROPS = "props/tree.png";
@@ -47,6 +48,7 @@ public class LoadSave {
     public static final String URM_BUTTONS = "ui/urm_buttons.png";
     public static final String VOLUME_BUTTONS = "ui/volume_buttons.png";
     public static final String DASH_BAR_SPRITE = "ui/energy_bar.png";
+    public static final String DEATH_ICON = "ui/death.jpg";
 
     // misc
     public static final String CURSOR = "misc/cursor.png";

@@ -1,5 +1,7 @@
 package game.platformer.gamestate;
 
+import static game.platformer.utils.Constants.ObjectConstants.FP;
+
 import game.platformer.Game;
 import game.platformer.enities.Player;
 import game.platformer.hud.HudPane;
@@ -75,7 +77,7 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void update() {
-        double buffer = (visibleAreaEnd - visibleAreaStart) * 0.2;
+        double buffer = (visibleAreaEnd - visibleAreaStart) * 0.05;
         this.visibleAreaStart = xLvlOffset - buffer;
         this.visibleAreaEnd = xLvlOffset + Game.getScreenWidth() + buffer;
         if (this.paused) {
@@ -102,8 +104,8 @@ public class Playing extends State implements StateMethods {
                 this.game.getGamePane().getCanvas().getHeight());
         this.backgroundManager.render(gc, xLvlOffset);
 
-        this.levelManager.render(gc, xLvlOffset);
         this.objectManager.render(gc, xLvlOffset, this.visibleAreaStart, this.visibleAreaEnd);
+        this.levelManager.render(gc, xLvlOffset);
         this.lightManager.render(xLvlOffset);
         this.particles.render(gc, xLvlOffset);
         this.hud.render();
@@ -130,6 +132,7 @@ public class Playing extends State implements StateMethods {
 
     public void loadNextLevel() {
         resetAll();
+        this.hud.resetDeathCount();
         this.levelManager.loadNextLevel();
         this.particles.setRainRendering();
         this.lightManager.setLightBoolean();
@@ -164,6 +167,9 @@ public class Playing extends State implements StateMethods {
         this.paused = false;
         this.lvlCompleted = false;
         this.hud.getTimer().restart();
+        this.gameOverOverlay.resetGraphicsContext();
+        this.levelCompletedOverlay.resetGraphicsContext();
+        this.levelManager.getCurrentLevel().getRunes().get(0).reset();
         this.player.resetAll();
     }
 
@@ -285,6 +291,10 @@ public class Playing extends State implements StateMethods {
 
     public LightManager getLightManager() {
         return this.lightManager;
+    }
+
+    public LevelCompletedOverlay getLevelCompletedOverlay() {
+        return this.levelCompletedOverlay;
     }
 
     public HudPane getHudPane() {

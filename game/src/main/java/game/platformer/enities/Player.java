@@ -86,6 +86,8 @@ public class Player extends Entity {
         if (!facingRight) {
             gc.restore();
         }
+
+        drawHitbox(gc, xLvlOffset);
     }
 
     private void checkInsideWater() {
@@ -210,6 +212,7 @@ public class Player extends Entity {
     public void kill() {
         this.playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
         this.playing.getGame().getAudioPlayer().stopSong();
+        this.playing.getHudPane().addDeath();
         this.isAlive = false;
     }
 
@@ -282,6 +285,7 @@ public class Player extends Entity {
         left = false;
         right = false;
         jump = false;
+        dash = 0.0f;
     }
 
     public void setRunning(boolean value) {
@@ -322,6 +326,10 @@ public class Player extends Entity {
 
     public void setAlive(boolean value) {
         this.isAlive = value;
+    }
+
+    public float getAirSpeed() {
+        return this.airSpeed;
     }
 
     public void dash(float value, double mouseX, double mouseY, int xLvlOffset) {

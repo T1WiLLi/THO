@@ -114,19 +114,22 @@ public class HelpMethods {
     }
 
     public static boolean isEntityOnFloor(Rectangle hitbox, int[][] lvlData) {
-        if (!isSolid((float) hitbox.getX(), (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData))
+        if (!isSolid((float) hitbox.getX(), (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData)) {
             if (!isSolid((float) (hitbox.getX() + hitbox.getWidth()), (float) (hitbox.getY() + hitbox.getHeight() + 1),
-                    lvlData))
+                    lvlData)) {
                 return false;
+            }
+        }
         return true;
     }
 
     public static boolean isFloor(Rectangle hitbox, float xSpeed, int[][] lvlData) {
-        if (xSpeed > 0)
+        if (xSpeed > 0) {
             return isSolid((float) (hitbox.getX() + hitbox.getWidth() + xSpeed),
                     (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData);
-        else
+        } else {
             return isSolid((float) (hitbox.getX() + xSpeed), (float) (hitbox.getY() + hitbox.getHeight() + 1), lvlData);
+        }
     }
 
     public static boolean isFloor(Rectangle hitbox, int[][] lvlData) {
@@ -140,7 +143,6 @@ public class HelpMethods {
     public static boolean hasPlayerFinishedLevel(Level level) {
         for (Rune rune : level.getRunes()) {
             if (rune.hasPlayerPassedTheLevel()) {
-                rune.reset();
                 return true;
             } else {
                 return false;

@@ -28,7 +28,7 @@ public class GamePane extends StackPane {
         return this.gc;
     }
 
-    private class ResizableCanvas extends Canvas {
+    public class ResizableCanvas extends Canvas {
         public ResizableCanvas() {
             this.widthProperty().addListener(evt -> game.render());
             this.heightProperty().addListener(evt -> game.render());

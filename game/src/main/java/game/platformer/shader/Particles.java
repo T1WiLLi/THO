@@ -95,8 +95,6 @@ public class Particles {
             } else {
                 renderRain = false;
             }
-
-            renderRain = true;
         }
     }
 }

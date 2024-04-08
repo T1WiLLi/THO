@@ -16,11 +16,20 @@ import javafx.scene.image.Image;
 
 public class SpikeBall extends GameObject {
 
+    private static Image chain;
+
+    static {
+        chain = LoadSave.getSprite(LoadSave.CHAIN_OBJ);
+    }
+
     private Image sprite;
     private Point closestAttachPoint;
 
     private double rotationAngle;
     private double rotationSpeed;
+
+    // Chains
+    private double distance = 0;
 
     public SpikeBall(int x, int y, int objType) {
         super(x, y, objType);
@@ -71,6 +80,10 @@ public class SpikeBall extends GameObject {
     }
 
     public void update(int[][] lvlData) {
+        if (this.distance == 0) {
+            this.distance = Math.sqrt(
+                    Math.pow(x - this.closestAttachPoint.getX(), 2) + Math.pow(y - this.closestAttachPoint.getY(), 2));
+        }
         rotate(lvlData);
     }
 
@@ -110,8 +123,6 @@ public class SpikeBall extends GameObject {
             double attachX = closestAttachPoint.getX();
             double attachY = closestAttachPoint.getY();
 
-            double distance = Math.sqrt(Math.pow(x - attachX, 2) + Math.pow(y - attachY, 2));
-
             double directionX = (x - attachX) / distance;
             double directionY = (y - attachY) / distance;
 
@@ -124,10 +135,9 @@ public class SpikeBall extends GameObject {
             double chainStartY = attachY + ((SPIKE_BALL_HEIGHT / 2 - CHAIN_HEIGHT) / 2) / 2;
 
             // Render the chains
-            for (double i = 0; i < distance; i += CHAIN_WIDTH) {
-                gc.drawImage(LoadSave.getSprite(LoadSave.CHAIN_OBJ), chainStartX - xOffset, chainStartY, CHAIN_WIDTH,
+            for (double i = 0; i < distance - CHAIN_WIDTH; i += CHAIN_WIDTH) {
+                gc.drawImage(chain, chainStartX - xOffset, chainStartY, CHAIN_WIDTH,
                         CHAIN_HEIGHT);
-
                 chainStartX += rotatedDirectionX * CHAIN_WIDTH;
                 chainStartY += rotatedDirectionY * CHAIN_HEIGHT;
             }
